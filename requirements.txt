@@ -1,0 +1,2 @@
+psutil
+pywin32
