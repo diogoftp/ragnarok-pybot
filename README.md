@@ -75,8 +75,13 @@ The _.gat_ files were extacted from the game's _data.grf_ using [this GRF editor
 ### TODO
 
 [] Walk to a coordinate outside of screen area. Basically use the [A*](https://www.geeksforgeeks.org/a-search-algorithm/) algorithm to find the shortest path in the map graph read from the _.gat_ files. Will probably be implemented both in Python and C (using [Cython](https://cython.org/)) for performance comparison.
+
 [] Make walking work with any camera angle configured in the game. At this moment, changing the camera angle breaks walking.
+
 [] Pick up items from the ground.
+
 [] Monster fighting. This will probably introduce a global bot state, such as walking, fighting, looting...
+
 [] Walking from anywhere to anywhere. Will probably look into Openkore files to find where the information about map links are (which maps connect to which maps).
+
 [] Automatic returning to town and storing/selling items.
