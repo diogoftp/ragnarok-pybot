@@ -59,10 +59,11 @@ To find the entity list, I started by finding the base address of some monsters 
 struct EntityList {      // Offset
    EntityList* next;     // 0
    EntityList* prev;     // 4
+   Entity* entity;       // 8
 };
 ```
 
-Each pointer pointed to a struct that is not completely known yet, but the offset 0x10 is always a pointer to what we called Entity in this project. Other attributes from this struct seem to hold sprite information and pointer to monster HP struct.
+Each pointer pointed to a struct that is not completely known yet, but the offset 0x8 is always a pointer to what we called Entity in this project. Other attributes from this struct seem to hold sprite information and pointer to monster HP struct.
 
 ![Entity list 1](img/entity_list_1.png)
 ![Entity list 2](img/entity_list_2.png)
