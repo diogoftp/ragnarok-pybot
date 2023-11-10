@@ -26,7 +26,9 @@ class Bot():
     print(f"Player HP: {self.world.player.hp()}/{self.world.player.max_hp()}")
     coords = self.world.player.coordinates()
     print(f"Map name: {self.world.player.map_name()} {coords}")
-    print(f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)})")
+    print(f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})")
+    print(f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}")
+    print(f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}")
     print(self.world.entity_list)
 
   def start_game_loop(self):
