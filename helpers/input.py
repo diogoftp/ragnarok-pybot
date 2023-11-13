@@ -40,7 +40,7 @@ class Mouse():
   def get_current_mouse_pos(self):
     return win32gui.ScreenToClient(self.handle, win32api.GetCursorPos())
 
-  def send_click(self, destination):
+  def send_click(self, destination=None):
     lParam = 0
 
     if destination != None:

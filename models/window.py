@@ -1,11 +1,13 @@
 import win32gui
 from helpers.map import CELL_PIXEL_SIZE
+import math
 
 
 class Window():
-  def __init__(self, player):
+  def __init__(self, world):
     self.handle = win32gui.FindWindow(None, "4th | Gepard Shield 3.0 (^-_-^)")
-    self.player = player
+    self.player = world.player
+    self.view = world.view
 
   def get_rect(self):
     return win32gui.GetWindowRect(self.handle)
@@ -29,10 +31,17 @@ class Window():
 
   def translate_to_screen_coords(self, target_coords):
     player_coords = self.player_coords()
-    game_coords_diff = (target_coords[0] - player_coords[0], target_coords[1] - player_coords[1])
-    center = self.center()
+    # Distance vector
+    dx, dy = (target_coords[0] - player_coords[0], -(target_coords[1] - player_coords[1]))
 
-    x = center[0] + game_coords_diff[0] * CELL_PIXEL_SIZE[0]
-    y = center[1] - game_coords_diff[1] * CELL_PIXEL_SIZE[1]
+    # Rotate the distance vector acording to the horizontal camera angle rotation
+    angle_radians = math.radians(self.view.horizontal_camera_angle())
+    x = dx * math.cos(angle_radians) + dy * math.sin(angle_radians)
+    y = -dx * math.sin(angle_radians) + dy * math.cos(angle_radians)
 
-    return x, y
+    # Calculate the distance in pixels
+    cx, cy = self.center()
+    x = cx + x * CELL_PIXEL_SIZE[0]
+    y = cy + y * CELL_PIXEL_SIZE[1]
+
+    return int(round(x)), int(round(y))

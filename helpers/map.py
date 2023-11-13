@@ -1,6 +1,7 @@
 import struct
 
-CELL_PIXEL_SIZE = (24, 18)
+# For zoom = 400 and vertical angle = -50
+CELL_PIXEL_SIZE = (31, 25)
 
 
 class Map():

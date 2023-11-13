@@ -15,7 +15,7 @@ class Bot():
   def __init__(self):
     self.process = Process("ragna4th.exe", Process.PROCESS_VM_READ)
     self.world = World(self.process)
-    self.window = Window(self.world.player)
+    self.window = Window(self.world)
     self.input = Input(self.window)
     self.macro = Macro(self.window, self.input)
     self.map = Map(self.world.player)
