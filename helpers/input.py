@@ -2,6 +2,7 @@ import win32api
 import win32gui
 import win32.lib.win32con as win32con
 from time import sleep
+from helpers.addresses import GAME_BASE, MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 
 
 class Input():
@@ -39,6 +40,16 @@ class Mouse():
 
   def get_current_mouse_pos(self):
     return win32gui.ScreenToClient(self.handle, win32api.GetCursorPos())
+
+  def get_game_mouse_pos(self):
+    x = self.window.view.process.memory.read_u_int(GAME_BASE + MOUSE_POS_X_OFFSET)
+    y = self.window.view.process.memory.read_u_int(GAME_BASE + MOUSE_POS_Y_OFFSET)
+    return (x, y)
+
+  def set_game_mouse_pos(self, pos):
+    pos = self.window.translate_to_screen_coords(pos)
+    self.window.view.process.memory.write_u_int(pos[0], GAME_BASE + MOUSE_POS_X_OFFSET)
+    self.window.view.process.memory.write_u_int(pos[1], GAME_BASE + MOUSE_POS_Y_OFFSET)
 
   def send_click(self, destination=None):
     lParam = 0

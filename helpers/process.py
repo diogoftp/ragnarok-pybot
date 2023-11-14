@@ -1,4 +1,5 @@
 import ctypes
+from ctypes import wintypes
 import psutil
 
 kernel32 = ctypes.windll.kernel32
@@ -13,6 +14,16 @@ class Memory(object):
     kernel32.ReadProcessMemory(self.process, addr, ctypes.byref(result), ctypes.sizeof(result), 0)
 
     return result.value
+
+  def write(self, c_type, value, addr: int):
+    WriteProcessMemory = kernel32.WriteProcessMemory
+    WriteProcessMemory.argtypes = [wintypes.HANDLE, wintypes.LPVOID, wintypes.LPCVOID, c_type, ctypes.POINTER(c_type)]
+    WriteProcessMemory.restypes = wintypes.BOOL
+
+    value = c_type(value)
+    bytes_to_write = ctypes.sizeof(value)
+    bytes_written = c_type(0)
+    WriteProcessMemory(self.process, addr, ctypes.addressof(value), bytes_to_write, ctypes.byref(bytes_written))
 
   def read_u_short_int(self, addr: int):
     return self.read(ctypes.c_ushort(), addr)
@@ -42,10 +53,14 @@ class Memory(object):
   def read_ptr(self, addr: int, offset=0x0):
     return self.read(ctypes.c_ulong(), addr + offset)
 
+  def write_u_int(self, value, addr: int):
+    return self.write(ctypes.c_ulong, value, addr)
+
 
 class Process(object):
   PROCESS_VM_READ = 0x0010
   PROCESS_VM_WRITE = 0x0020
+  PROCESS_VM_OPERATION = 0x0008
 
   def __init__(self, name, open_privileges=None):
     self.name = name
@@ -69,7 +84,6 @@ class Process(object):
       raise RuntimeError("Process could not be opened")
 
     self.handle = kernel32.OpenProcess(privileges, 0, self.pid)
-    # self.base = win32process.EnumProcessModules(self.handle)[0]
     self.memory = Memory(self.handle)
 
   def close(self):

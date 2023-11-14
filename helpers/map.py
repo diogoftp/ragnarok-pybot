@@ -16,7 +16,6 @@ class Map():
   def load_file(self):
     try:
       file_path = f"./maps/{self.current_map}.gat"
-      print(file_path)
       return open(file_path, "rb")
     except FileNotFoundError:
       return None

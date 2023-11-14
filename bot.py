@@ -13,7 +13,7 @@ from models.entity import EntityList, Entity
 
 class Bot():
   def __init__(self):
-    self.process = Process("ragna4th.exe", Process.PROCESS_VM_READ)
+    self.process = Process("ragna4th.exe", Process.PROCESS_VM_OPERATION | Process.PROCESS_VM_READ | Process.PROCESS_VM_WRITE)
     self.world = World(self.process)
     self.window = Window(self.world)
     self.input = Input(self.window)
