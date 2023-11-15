@@ -1,9 +1,9 @@
 from helpers.process import Process
 from models.world import World
 from models.player import Player
-from models.window import Window
 from models.macro import Macro
 from models.action import Action
+from helpers.window import Window
 from helpers.input import Input
 from helpers.map import Map
 from time import sleep
@@ -16,8 +16,8 @@ class Bot():
   def __init__(self):
     self.process = Process("ragna4th.exe", Process.PROCESS_VM_OPERATION | Process.PROCESS_VM_READ | Process.PROCESS_VM_WRITE)
     self.world = World(self.process)
-    self.window = Window(self.world)
-    self.input = Input(self.window)
+    self.window = Window(self.world.view)
+    self.input = Input(self.window, self.world.player)
     self.macro = Macro(self.window, self.input)
     self.map = Map(self.world.player)
     self.action = Action(self.world, self.input, self.map)

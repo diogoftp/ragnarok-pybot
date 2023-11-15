@@ -6,10 +6,10 @@ from helpers.addresses import GAME_BASE, MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 
 
 class Input():
-  def __init__(self, window):
+  def __init__(self, window, player):
     self.window = window
     self.keyboard = Keyboard(self.window)
-    self.mouse = Mouse(self.window)
+    self.mouse = Mouse(self.window, player)
 
 
 class Keyboard():
@@ -34,8 +34,9 @@ class Keyboard():
 
 
 class Mouse():
-  def __init__(self, window):
+  def __init__(self, window, player):
     self.window = window
+    self.player = player
     self.handle = self.window.handle
 
   def get_current_mouse_pos(self):
@@ -47,7 +48,7 @@ class Mouse():
     return (x, y)
 
   def set_game_mouse_pos(self, pos):
-    pos = self.window.translate_to_screen_coords(pos)
+    pos = self.window.translate_to_screen_coords(self.player.coordinates(), pos)
     self.window.view.process.memory.write_u_int(pos[0], GAME_BASE + MOUSE_POS_X_OFFSET)
     self.window.view.process.memory.write_u_int(pos[1], GAME_BASE + MOUSE_POS_Y_OFFSET)
 
@@ -55,7 +56,7 @@ class Mouse():
     lParam = 0
 
     if destination != None:
-      destination = self.window.translate_to_screen_coords(destination)
+      destination = self.window.translate_to_screen_coords(self.player.coordinates(), destination)
       screen_destination = win32gui.ClientToScreen(self.handle, destination)
       win32api.SetCursorPos(screen_destination)
       lParam = win32api.MAKELONG(screen_destination[0], screen_destination[1])
