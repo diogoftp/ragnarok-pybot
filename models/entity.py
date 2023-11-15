@@ -14,6 +14,31 @@ class EntityList():
     self.current = self.first()
     self.first_address = self.current
     self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
+    self.entity_array = []
+
+  def __iter__(self):
+    return self
+
+  def __next__(self):
+    # Stop if first address changed, avoiding infinite loop while teleporting in the game
+    if self.first_address != self.first():
+      self.first_address = self.first()
+      self.reset()
+      raise StopIteration
+
+    if self.current is not None:
+      current_instance = self.current_entity_instance
+      self.find_next()
+      return current_instance
+
+    self.reset()
+    raise StopIteration
+
+  def update_array(self):
+    self.entity_array = []
+
+    for entity in self:
+      self.entity_array.append(entity)
 
   def first(self):
     return self.process.memory.read_ptr(self.base, 0x0)
@@ -35,18 +60,10 @@ class EntityList():
   def __str__(self):
     print("Entity list:")
 
-    while self.current:
-      # Stop if first address changed, avoiding infinite loop while teleporting in the game
-      if self.first_address != self.first():
-        self.first_address = self.first()
-        break
+    for entity in self:
+      print(f"{entity.id()}, {entity.coords()}")
 
-      print(f"\t{hex(self.current)}, {self.current_entity_instance.id()}, {self.current_entity_instance.coords()}")
-      self.find_next()
-
-    self.reset()
     return ""
-
 
 # id 0 = player
 # id <= 1000 npc / portal

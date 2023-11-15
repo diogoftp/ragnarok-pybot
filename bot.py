@@ -3,6 +3,7 @@ from models.world import World
 from models.player import Player
 from models.window import Window
 from models.macro import Macro
+from models.action import Action
 from helpers.input import Input
 from helpers.map import Map
 from time import sleep
@@ -19,10 +20,11 @@ class Bot():
     self.input = Input(self.window)
     self.macro = Macro(self.window, self.input)
     self.map = Map(self.world.player)
+    self.action = Action(self.world, self.input, self.map)
     self.start_game_loop()
 
   def print_game_state(self):
-    print(f"Player name: {self.world.player.name()}")
+    print(f"Player name: {self.world.player.name()} ({self.world.player.current_action})")
     print(f"Player HP: {self.world.player.hp()}/{self.world.player.max_hp()}")
     print(f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})")
     coords = self.world.player.coordinates()
@@ -41,6 +43,14 @@ class Bot():
       self.print_game_state()
       self.map.reload()
       self.macro.loop()
+
+      if self.world.player.current_action == "idle":
+        self.action.find_target()
+      elif self.world.player.current_action == "fighting":
+        self.action.fight()
+      elif self.world.player.current_action == "finding_target":
+        pass
+
       sleep(0.1)
 
     self.macro.stop()

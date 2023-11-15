@@ -16,6 +16,7 @@ class Player():
     0: "idle",
     1: "walking",
     2: "attacking",
+    5: "looting",
     6: "sitting",
     7: "delay",
     9: "attacking"
@@ -24,6 +25,7 @@ class Player():
   def __init__(self, process, world_base):
     self.process = process
     self.base = self.process.memory.read_ptr(world_base, PLAYER_BASE)
+    self.current_action = "idle"
 
   def name(self):
     return self.process.memory.read_str(GAME_BASE + PLAYER_NAME_OFFSET)
