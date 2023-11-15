@@ -5,8 +5,8 @@ CELL_PIXEL_SIZE = (31, 25)
 
 
 class Map():
-  def __init__(self, player):
-    self.player = player
+  def __init__(self, game):
+    self.game = game
     self.current_map = None
     self.map = []
     self.width = None
@@ -21,12 +21,12 @@ class Map():
       return None
 
   def reload(self):
-    if self.current_map == self.player.map_name():
+    if self.current_map == self.game.world.player.map_name():
       return
 
     self.map = []
 
-    self.current_map = self.player.map_name()
+    self.current_map = self.game.world.player.map_name()
     file = self.load_file()
 
     if file is None:

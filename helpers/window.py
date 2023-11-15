@@ -4,9 +4,9 @@ import math
 
 
 class Window():
-  def __init__(self, view):
+  def __init__(self, game):
     self.handle = win32gui.FindWindow(None, "4th | Gepard Shield 3.0 (^-_-^)")
-    self.view = view
+    self.game = game
 
   def get_rect(self):
     return win32gui.GetWindowRect(self.handle)
@@ -30,7 +30,7 @@ class Window():
     distance_x, distance_y = (target_coords[0] - player_coords[0], -(target_coords[1] - player_coords[1]))
 
     # Rotate the distance vector acording to the horizontal camera angle rotation
-    angle_radians = math.radians(self.view.horizontal_camera_angle())
+    angle_radians = math.radians(self.game.world.view.horizontal_camera_angle())
     target_x = distance_x * math.cos(angle_radians) + distance_y * math.sin(angle_radians)
     target_y = -distance_x * math.sin(angle_radians) + distance_y * math.cos(angle_radians)
 

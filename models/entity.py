@@ -58,12 +58,12 @@ class EntityList():
       self.current_entity_instance = None
 
   def __str__(self):
-    print("Entity list:")
+    entity_list_string = "Entity list:\n"
 
     for entity in self:
-      print(f"{entity.id()}, {entity.coords()}")
+      entity_list_string += f"{entity.id()}, {entity.coords()}\n"
 
-    return ""
+    return entity_list_string
 
 # id 0 = player
 # id <= 1000 npc / portal

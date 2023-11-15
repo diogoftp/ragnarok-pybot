@@ -22,22 +22,22 @@ class Player():
     9: "attacking"
   }
 
-  def __init__(self, process, world_base):
-    self.process = process
-    self.base = self.process.memory.read_ptr(world_base, PLAYER_BASE)
+  def __init__(self, game, world_base):
+    self.game = game
+    self.base = self.game.process.memory.read_ptr(world_base, PLAYER_BASE)
     self.current_action = "idle"
 
   def name(self):
-    return self.process.memory.read_str(GAME_BASE + PLAYER_NAME_OFFSET)
+    return self.game.process.memory.read_str(GAME_BASE + PLAYER_NAME_OFFSET)
 
   def hp(self):
-    return self.process.memory.read_u_int(GAME_BASE + PLAYER_CURRENT_HP_OFFSET)
+    return self.game.process.memory.read_u_int(GAME_BASE + PLAYER_CURRENT_HP_OFFSET)
 
   def max_hp(self):
-    return self.process.memory.read_u_int(GAME_BASE + PLAYER_MAX_HP_OFFSET)
+    return self.game.process.memory.read_u_int(GAME_BASE + PLAYER_MAX_HP_OFFSET)
 
   def map_name(self):
-    name = self.process.memory.read_str(GAME_BASE + MAP_NAME_OFFSET)
+    name = self.game.process.memory.read_str(GAME_BASE + MAP_NAME_OFFSET)
 
     if name:
       return name.split(".rsw")[0]
@@ -45,7 +45,7 @@ class Player():
     return None
 
   def coordinates(self):
-    return (self.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_X_OFFSET), self.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_Y_OFFSET))
+    return (self.game.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_Y_OFFSET))
 
   def state(self):
-    return self.process.memory.read_u_int(self.base + STATE_OFFSET)
+    return self.game.process.memory.read_u_int(self.base + STATE_OFFSET)
