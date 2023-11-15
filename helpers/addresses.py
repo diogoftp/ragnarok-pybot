@@ -18,9 +18,12 @@ MAP_NAME_OFFSET = 0xB3D1D8
 WORLD_BASE_OFFSET = 0xCC
 
 # From world base address
-# PLAYER_BASE = 0x2C
+PLAYER_BASE = 0x2C
 ENTITY_LIST_OFFSET = 0x10
 VIEW_OFFSET = 0xD0
+
+# From player base address
+STATE_OFFSET = 0x70
 
 # From entity list address
 ENTITY_OFFSET = 0x8

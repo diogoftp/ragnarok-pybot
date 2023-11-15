@@ -22,8 +22,9 @@ class Bot():
     self.start_game_loop()
 
   def print_game_state(self):
-    print(f"PLayer name: {self.world.player.name()}")
+    print(f"Player name: {self.world.player.name()}")
     print(f"Player HP: {self.world.player.hp()}/{self.world.player.max_hp()}")
+    print(f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})")
     coords = self.world.player.coordinates()
     print(f"Map name: {self.world.player.map_name()} {coords}")
     print(f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})")

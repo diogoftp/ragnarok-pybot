@@ -1,19 +1,29 @@
 from helpers.addresses import (
   GAME_BASE,
-  # PLAYER_BASE,
+  PLAYER_BASE,
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
   PLAYER_MAX_HP_OFFSET,
   PLAYER_COORDINATE_X_OFFSET,
   PLAYER_COORDINATE_Y_OFFSET,
-  MAP_NAME_OFFSET
+  MAP_NAME_OFFSET,
+  STATE_OFFSET
 )
 
 
 class Player():
+  state_map = {
+    0: "idle",
+    1: "walking",
+    2: "attacking",
+    6: "sitting",
+    7: "delay",
+    9: "attacking"
+  }
+
   def __init__(self, process, world_base):
     self.process = process
-    # self.base = self.process.memory.read_ptr(world_base, PLAYER_BASE)
+    self.base = self.process.memory.read_ptr(world_base, PLAYER_BASE)
 
   def name(self):
     return self.process.memory.read_str(GAME_BASE + PLAYER_NAME_OFFSET)
@@ -34,3 +44,6 @@ class Player():
 
   def coordinates(self):
     return (self.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_X_OFFSET), self.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_Y_OFFSET))
+
+  def state(self):
+    return self.process.memory.read_u_int(self.base + STATE_OFFSET)
