@@ -19,6 +19,7 @@ class Keyboard():
     Z = 0x5A
     A = 0x41
     END = 0x23
+    HOME = 0x24
 
   def __init__(self, game):
     self.game = game
@@ -28,6 +29,8 @@ class Keyboard():
       self.game.running = False
     if self.pressed(self.VKEYS.F1):
       self.game.macro.active = not self.game.macro.active
+    if self.pressed(self.VKEYS.HOME):
+      self.game.paused = not self.game.paused
 
   def pressed(self, key):
     return win32api.GetAsyncKeyState(key) != 0
