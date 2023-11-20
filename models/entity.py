@@ -3,7 +3,11 @@ from helpers.addresses import (
   ENTITY_OFFSET,
   ID_OFFSET,
   COORDINATE_X_OFFSET,
-  COORDINATE_Y_OFFSET
+  COORDINATE_Y_OFFSET,
+  SCREEN_COORDINATE_X_OFFSET,
+  SCREEN_COORDINATE_Y_OFFSET,
+  C_SPR_RES_OFFSET,
+  SPRITE_NAME_OFFSET
 )
 
 
@@ -43,25 +47,26 @@ class EntityList():
   def first(self):
     return self.process.memory.read_ptr(self.base, 0x0)
 
+  def last(self):
+    return self.process.memory.read_ptr(self.base, 0x4)
+
   def reset(self):
     self.current = self.first()
     self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
 
   def find_next(self):
-    next_entity = self.process.memory.read_ptr(self.current, 0x0)
-
-    if next_entity != self.first():
-      self.current = next_entity
-      self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
-    else:
+    if self.current == self.last():
       self.current = None
       self.current_entity_instance = None
+    else:
+      self.current = self.process.memory.read_ptr(self.current, 0x0)
+      self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
 
   def __str__(self):
     entity_list_string = "Entity list:\n"
 
     for entity in self:
-      entity_list_string += f"{entity.id()}, {entity.coords()}\n"
+      entity_list_string += f"{entity}\n"
 
     return entity_list_string
 
@@ -74,8 +79,18 @@ class Entity():
     self.process = process
     self.base = base
 
+  def __str__(self):
+    return f"{self.id()} | {self.name()} | {self.coords()} | {self.screen_coords()}"
+
   def id(self):
     return self.process.memory.read_u_int(self.base + ID_OFFSET)
 
   def coords(self):
     return (self.process.memory.read_u_int(self.base + COORDINATE_X_OFFSET), self.process.memory.read_u_int(self.base + COORDINATE_Y_OFFSET))
+
+  def screen_coords(self):
+    return (self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_X_OFFSET), self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_Y_OFFSET))
+
+  def name(self):
+    cspr_res_address = self.process.memory.read_ptr(self.base + C_SPR_RES_OFFSET)
+    return self.process.memory.read_str(cspr_res_address + SPRITE_NAME_OFFSET).strip("\\").split(".spr")[0]
