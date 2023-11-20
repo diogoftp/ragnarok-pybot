@@ -17,12 +17,7 @@ class Game():
     self.macro = Macro(self)
     self.map = Map(self)
     self.action = Action(self)
-    # self.world = World(self.process)
-    # self.window = Window(self.world.view)
-    # self.input = Input(self.window, self.world.player)
-    # self.macro = Macro(self.window, self.input)
-    # self.map = Map(self.world.player)
-    # self.action = Action(self.world, self.input, self.map)
+    self.running = True
 
   def __str__(self):
     coords = self.world.player.coordinates()
@@ -34,5 +29,6 @@ class Game():
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
     game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}\n"
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
+    game_string += f"Macro status: {self.macro.active}\n"
     game_string += str(self.world.entity_list)
     return game_string

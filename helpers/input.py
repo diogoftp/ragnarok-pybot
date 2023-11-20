@@ -2,6 +2,7 @@ import win32api
 import win32gui
 import win32.lib.win32con as win32con
 from time import sleep
+
 from helpers.addresses import GAME_BASE, MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 
 
@@ -21,7 +22,12 @@ class Keyboard():
 
   def __init__(self, game):
     self.game = game
-    self.KILL_SWITCH_KEY = self.VKEYS.END
+
+  def listen_keys(self):
+    if self.pressed(self.VKEYS.END):
+      self.game.running = False
+    if self.pressed(self.VKEYS.F1):
+      self.game.macro.active = not self.game.macro.active
 
   def pressed(self, key):
     return win32api.GetAsyncKeyState(key) != 0
@@ -44,8 +50,10 @@ class Mouse():
     y = self.game.window.view.process.memory.read_u_int(GAME_BASE + MOUSE_POS_Y_OFFSET)
     return (x, y)
 
-  def set_game_mouse_pos(self, pos):
-    pos = self.game.window.translate_to_screen_coords(self.game.world.player.coordinates(), pos)
+  def set_game_mouse_pos(self, pos, game_coords=True):
+    if game_coords:
+      pos = self.game.window.translate_to_screen_coords(self.game.world.player.coordinates(), pos)
+
     self.game.process.memory.write_u_int(pos[0], GAME_BASE + MOUSE_POS_X_OFFSET)
     self.game.process.memory.write_u_int(pos[1], GAME_BASE + MOUSE_POS_Y_OFFSET)
 

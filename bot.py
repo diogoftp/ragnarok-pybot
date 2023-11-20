@@ -9,14 +9,11 @@ class Bot():
     self.start_game_loop()
 
   def start_game_loop(self):
-    while(True):
-      if self.game.input.keyboard.pressed(self.game.input.keyboard.KILL_SWITCH_KEY):
-        break
-
+    while(self.game.running):
       os.system("cls")
       print(self.game)
+      self.game.input.keyboard.listen_keys()
       self.game.map.reload()
-      self.game.macro.loop()
 
       if self.game.world.player.current_action == "idle":
         self.game.action.find_target()

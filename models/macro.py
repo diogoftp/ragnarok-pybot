@@ -15,11 +15,6 @@ class Macro():
     self.active = False
     self.thread_running = False
 
-  def loop(self):
-    print(self.active)
-    if self.game.input.keyboard.pressed(self.game.input.keyboard.VKEYS.F1):
-      self.active = not self.active
-
   def macro_loop(self):
     while self.thread_running:
       print("Macro thread running")
