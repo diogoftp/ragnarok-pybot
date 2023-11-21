@@ -1,12 +1,29 @@
 import win32gui
-from helpers.map import CELL_PIXEL_SIZE
+import win32process
 import math
+
+from helpers.map import CELL_PIXEL_SIZE
+
+WINDOW_NAME = "4th | Gepard Shield 3.0 (^-_-^)"
 
 
 class Window():
   def __init__(self, game):
-    self.handle = win32gui.FindWindow(None, "4th | Gepard Shield 3.0 (^-_-^)")
     self.game = game
+    self.handle = self.get_window_handle()
+
+  def get_window_handle(self):
+    windows = []
+    win32gui.EnumWindows(lambda handle, _: windows.append(handle), None)
+
+    for handle in windows:
+      _, process_id = win32process.GetWindowThreadProcessId(handle)
+      window_name = win32gui.GetWindowText(handle)
+
+      if (process_id == self.game.process.pid) and (window_name == WINDOW_NAME):
+        return handle
+
+    raise RuntimeError("Failed to get window handle")
 
   def get_rect(self):
     return win32gui.GetWindowRect(self.handle)

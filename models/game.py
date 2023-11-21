@@ -13,7 +13,8 @@ from models.action import Action
 
 class Game():
   def __init__(self):
-    self.process = Process("ragna4th.exe", Process.PROCESS_VM_OPERATION | Process.PROCESS_VM_READ | Process.PROCESS_VM_WRITE)
+    self.process = Process()
+    self.base = self.process.base
     self.world = World(self)
     self.window = Window(self)
     self.input = Input(self)

@@ -1,6 +1,3 @@
-# Base address where the game is loaded
-GAME_BASE = 0x400000
-
 # Static addresses offsets
 MOUSE_POS_X_OFFSET = 0xB47F60
 MOUSE_POS_Y_OFFSET = 0xB47F64

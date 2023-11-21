@@ -1,5 +1,6 @@
+from time import sleep
+
 from helpers.addresses import (
-  GAME_BASE,
   PLAYER_BASE,
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
@@ -9,7 +10,6 @@ from helpers.addresses import (
   MAP_NAME_OFFSET,
   STATE_OFFSET
 )
-from time import sleep
 
 
 class Action():

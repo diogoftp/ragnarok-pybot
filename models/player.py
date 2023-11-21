@@ -1,5 +1,4 @@
 from helpers.addresses import (
-  GAME_BASE,
   PLAYER_BASE,
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
@@ -28,16 +27,16 @@ class Player():
     self.current_action = "idle"
 
   def name(self):
-    return self.game.process.memory.read_str(GAME_BASE + PLAYER_NAME_OFFSET)
+    return self.game.process.memory.read_str(self.game.base + PLAYER_NAME_OFFSET)
 
   def hp(self):
-    return self.game.process.memory.read_u_int(GAME_BASE + PLAYER_CURRENT_HP_OFFSET)
+    return self.game.process.memory.read_u_int(self.game.base + PLAYER_CURRENT_HP_OFFSET)
 
   def max_hp(self):
-    return self.game.process.memory.read_u_int(GAME_BASE + PLAYER_MAX_HP_OFFSET)
+    return self.game.process.memory.read_u_int(self.game.base + PLAYER_MAX_HP_OFFSET)
 
   def map_name(self):
-    name = self.game.process.memory.read_str(GAME_BASE + MAP_NAME_OFFSET)
+    name = self.game.process.memory.read_str(self.game.base + MAP_NAME_OFFSET)
 
     if name:
       return name.split(".rsw")[0]
@@ -45,7 +44,7 @@ class Player():
     return None
 
   def coordinates(self):
-    return (self.game.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(GAME_BASE + PLAYER_COORDINATE_Y_OFFSET))
+    return (self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(self.game.process.base + PLAYER_COORDINATE_Y_OFFSET))
 
   def state(self):
     return self.game.process.memory.read_u_int(self.base + STATE_OFFSET)

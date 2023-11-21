@@ -1,11 +1,16 @@
-import ctypes
-from ctypes import wintypes
 import psutil
 import struct
+import win32api
+import win32process
+import win32
+import ctypes
+from ctypes import wintypes
+from datetime import datetime
 
 kernel32 = ctypes.windll.kernel32
 CHAR_SIZE = 1
 FLOAT_SIZE = 4
+EXECUTABLE_NAME = "ragna4th.exe"
 
 
 class Memory(object):
@@ -61,7 +66,7 @@ class Memory(object):
   def write_u_int(self, value, addr: int):
     return self.write(ctypes.c_ulong, value, addr)
 
-  # For some reason it doesn't work writting float to the game.
+  # For some reason it doesn't work writing float to the game.
   # Probably because the game is 32-bit and I'm using a 64-bit Python interpreter.
   # So this function is a wrapper to the write_byte_array function.
   # Writing it at byte level works :D
@@ -81,15 +86,15 @@ class Process(object):
   PROCESS_VM_WRITE = 0x0020
   PROCESS_VM_OPERATION = 0x0008
 
-  def __init__(self, name, open_privileges=None):
-    self.name = name
-    self.pid = self.get_pid()
+  def __init__(self, open_privileges=None):
+    self.name = EXECUTABLE_NAME
     self.handle = None
     self.memory = None
+    self.pid = None
     self.base = None
-
-    if open_privileges is not None:
-      self.open(open_privileges)
+    self.get_pid()
+    self.open(self.PROCESS_VM_OPERATION | self.PROCESS_VM_READ | self.PROCESS_VM_WRITE)
+    self.get_base_address()
 
   def __del__(self):
     if self.handle is not None:
@@ -110,8 +115,33 @@ class Process(object):
     self.handle = None
 
   def get_pid(self):
+    processes_found = []
+
     for process in psutil.process_iter():
       if process.name() == self.name:
-        return process.pid
-    else:
-      return 0
+        processes_found.append(process)
+
+    if len(processes_found) == 1:
+      self.pid = processes_found[0].pid
+      return
+    elif len(processes_found) > 1:
+      for index, process in enumerate(processes_found):
+        print(f"[{index}] {process.name()} started {datetime.fromtimestamp(process._create_time)}")
+
+      selected_index = input("Type the number of the process you would like to bot:")
+      self.pid = processes_found[int(selected_index)].pid
+      return
+
+    raise RuntimeError("Failed to get process PID")
+
+  def get_base_address(self):
+    modules = win32process.EnumProcessModules(self.handle)
+
+    for module in modules:
+      module_name = str(win32process.GetModuleFileNameEx(self.handle, module))
+
+      if module_name.split("\\")[-1] == EXECUTABLE_NAME:
+        self.base = module
+        return
+
+    raise RuntimeError("Failed to get process base address")
