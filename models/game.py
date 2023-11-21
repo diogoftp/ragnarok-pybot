@@ -20,6 +20,7 @@ class Game():
     self.macro = Macro(self)
     self.map = Map(self)
     self.action = Action(self)
+    self.world.view.set_default_camera_angles()
     self.running = True
     self.paused = False
 
@@ -66,3 +67,10 @@ class Game():
       self.action.fight()
     elif self.world.player.current_action == "finding_target":
       pass
+
+  def toggle_bot(self):
+    self.paused = not self.paused
+
+    if not self.paused:
+      self.world.view.set_default_camera_angles()
+

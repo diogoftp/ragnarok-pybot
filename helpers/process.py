@@ -1,9 +1,11 @@
 import ctypes
 from ctypes import wintypes
 import psutil
+import struct
 
 kernel32 = ctypes.windll.kernel32
 CHAR_SIZE = 1
+FLOAT_SIZE = 4
 
 
 class Memory(object):
@@ -20,7 +22,10 @@ class Memory(object):
     WriteProcessMemory.argtypes = [wintypes.HANDLE, wintypes.LPVOID, wintypes.LPCVOID, c_type, ctypes.POINTER(c_type)]
     WriteProcessMemory.restypes = wintypes.BOOL
 
-    value = c_type(value)
+    # Arrays/buffers must be passed as ctypes, other values can be casted here
+    if not isinstance(value, ctypes.Array):
+      value = c_type(value)
+
     bytes_to_write = ctypes.sizeof(value)
     bytes_written = c_type(0)
     WriteProcessMemory(self.process, addr, ctypes.addressof(value), bytes_to_write, ctypes.byref(bytes_written))
@@ -55,6 +60,20 @@ class Memory(object):
 
   def write_u_int(self, value, addr: int):
     return self.write(ctypes.c_ulong, value, addr)
+
+  # For some reason it doesn't work writting float to the game.
+  # Probably because the game is 32-bit and I'm using a 64-bit Python interpreter.
+  # So this function is a wrapper to the write_byte_array function.
+  # Writing it at byte level works :D
+  def write_float(self, value, addr: int):
+    byte_array = struct.pack("f", value)
+    buffer = ctypes.c_buffer(FLOAT_SIZE)
+    buffer.value = byte_array
+
+    return self.write_byte_array(buffer, addr)
+
+  def write_byte_array(self, buffer, addr: int):
+    return self.write(ctypes.c_byte, buffer, addr)
 
 
 class Process(object):

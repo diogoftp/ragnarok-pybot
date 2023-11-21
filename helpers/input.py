@@ -31,7 +31,7 @@ class Keyboard():
     if self.pressed(self.VKEYS.F1):
       self.game.macro.active = not self.game.macro.active
     if self.pressed(self.VKEYS.HOME):
-      self.game.paused = not self.game.paused
+      self.game.toggle_bot()
 
   def pressed(self, key):
     key_state = win32api.GetKeyState(key)
