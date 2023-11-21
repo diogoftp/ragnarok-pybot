@@ -35,6 +35,7 @@ class Game():
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
     game_string += f"Macro status: {self.macro.active}\n"
     game_string += f"Bot paused?: {self.paused}\n"
+    game_string += f"Currently fighting: {self.action.fighting_entity}\n"
     game_string += str(self.world.entity_list)
     return game_string
 

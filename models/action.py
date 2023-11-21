@@ -25,7 +25,7 @@ class Action():
     self.game.world.entity_list.update_array()
 
     for entity in self.game.world.entity_list.entity_array:
-      if entity.id() > 999:
+      if entity.id() > 999 and entity.id() < 5000:
         self.fighting_entity = entity
         return self.fight()
 
@@ -40,8 +40,8 @@ class Action():
       self.fighting_entity = None
       return
 
-    if (self.fighting_entity is not None) and (self.game.world.player.state() != 2):
+    if (self.fighting_entity is not None) and (self.game.world.player.state() not in [2, 5, 7, 9]):
       self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.Z)
-      self.game.input.mouse.set_game_mouse_pos(self.fighting_entity.coords())
+      self.game.input.mouse.set_game_mouse_pos(self.fighting_entity.screen_coords(), game_coords=False)
       self.game.input.mouse.send_click()
-      sleep(1)
+      sleep(0.1)
