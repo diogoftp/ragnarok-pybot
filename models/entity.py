@@ -24,8 +24,9 @@ class EntityList():
     return self
 
   def __next__(self):
+    # Check if list is empty, otherwise it is going to return memory garbage
     # Stop if first address changed, avoiding infinite loop while teleporting in the game
-    if self.first_address != self.first():
+    if (self.first() == self.base or self.first_address != self.first()):
       self.first_address = self.first()
       self.reset()
       raise StopIteration
