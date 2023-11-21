@@ -23,6 +23,7 @@ class Keyboard():
 
   def __init__(self, game):
     self.game = game
+    self.last_key_states = {}
 
   def listen_keys(self):
     if self.pressed(self.VKEYS.END):
@@ -33,7 +34,17 @@ class Keyboard():
       self.game.paused = not self.game.paused
 
   def pressed(self, key):
-    return win32api.GetAsyncKeyState(key) != 0
+    key_state = win32api.GetKeyState(key)
+
+    if key_state == 0 or key_state == 1:
+      if key not in self.last_key_states:
+        self.last_key_states[key] = key_state
+        return False
+      elif self.last_key_states[key] != key_state:
+        self.last_key_states[key] = key_state
+        return True
+
+    return False
 
   def send_key(self, key):
     win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0)

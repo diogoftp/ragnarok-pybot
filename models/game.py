@@ -40,9 +40,9 @@ class Game():
 
   def loop(self):
     while(self.running):
-      self.input.keyboard.listen_keys()
       self.refresh_game_data()
       self.print_game_state()
+      self.input.keyboard.listen_keys()
 
       if not self.paused:
         self.execute_actions()
