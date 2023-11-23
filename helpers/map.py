@@ -1,7 +1,9 @@
 import struct
+import winsound
 
 # For zoom = 400 and vertical angle = -50
 CELL_PIXEL_SIZE = (31, 25)
+ALLOWED_MAPS = ["moc_fild13"]
 
 
 class Map():
@@ -11,6 +13,9 @@ class Map():
     self.map = []
     self.width = None
     self.height = None
+    self.last_map_unallowed = False
+    self.last_bot_status = self.game.active
+    self.last_macro_status = self.game.macro.active
     self.reload()
 
   def load_file(self):
@@ -47,6 +52,19 @@ class Map():
       self.map.append(tile_type)
 
     file.close()
+
+  def check_is_allowed_map(self):
+    if (self.current_map not in ALLOWED_MAPS) and (not self.last_map_unallowed):
+      winsound.PlaySound("unallowed_map.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
+      self.last_bot_status = self.game.active
+      self.last_macro_status = self.game.macro.active
+      self.last_map_unallowed = True
+      self.game.toggle_bot(active=False)
+      self.game.macro.active = False
+    elif (self.current_map in ALLOWED_MAPS) and (self.last_map_unallowed):
+      self.last_map_unallowed = False
+      self.game.toggle_bot(active=self.last_bot_status)
+      self.game.macro.active = self.last_macro_status
 
   def read_coords(self, coords):
     if len(self.map) == 0:

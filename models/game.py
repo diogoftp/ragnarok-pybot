@@ -15,6 +15,8 @@ class Game():
   def __init__(self):
     self.process = Process()
     self.base = self.process.base
+    self.running = True
+    self.active = True
     self.world = World(self)
     self.window = Window(self)
     self.input = Input(self)
@@ -22,8 +24,6 @@ class Game():
     self.map = Map(self)
     self.action = Action(self)
     self.world.view.set_default_camera_angles()
-    self.running = True
-    self.paused = False
 
   def __str__(self):
     coords = self.world.player.coordinates()
@@ -35,8 +35,8 @@ class Game():
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
     game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}\n"
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
-    game_string += f"Macro status: {self.macro.active}\n"
-    game_string += f"Bot paused?: {self.paused}\n"
+    game_string += f"Macro active?: {self.macro.active}\n"
+    game_string += f"Bot active?: {self.active}\n"
     game_string += f"Currently fighting: {self.action.fighting_entity}\n"
     game_string += str(self.world.entity_list)
     return game_string
@@ -47,7 +47,7 @@ class Game():
       self.print_game_state()
       self.input.keyboard.listen_keys()
 
-      if not self.paused:
+      if self.active:
         self.execute_actions()
 
       sleep(0.1)
@@ -56,6 +56,7 @@ class Game():
 
   def refresh_game_data(self):
     self.map.reload()
+    self.map.check_is_allowed_map()
 
   def print_game_state(self):
     os.system("cls")
@@ -69,9 +70,13 @@ class Game():
     elif self.world.player.current_action == "finding_target":
       pass
 
-  def toggle_bot(self):
-    self.paused = not self.paused
+  def toggle_bot(self, active=None):
+    if active is None:
+      self.active = not self.active
+    elif active:
+      self.active = True
+    else:
+      self.active = False
 
-    if not self.paused:
+    if not self.active:
       self.world.view.set_default_camera_angles()
-
