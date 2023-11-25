@@ -1,5 +1,8 @@
 from helpers.addresses import (
+  WORLD_BASE_INTERMED_OFFSET,
+  WORLD_BASE_OFFSET,
   ENTITY_LIST_OFFSET,
+  ENTITY_LIST_SIZE,
   ENTITY_OFFSET,
   ID_OFFSET,
   COORDINATE_X_OFFSET,
@@ -12,13 +15,16 @@ from helpers.addresses import (
 
 
 class EntityList():
-  def __init__(self, process, world_base):
+  def __init__(self, process, game):
     self.process = process
-    self.base = self.process.memory.read_ptr(world_base, ENTITY_LIST_OFFSET)
+    self.game = game
     self.current = self.first()
     self.first_address = self.current
-    self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
+    self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, offset=ENTITY_OFFSET))
     self.entity_array = []
+
+  def base(self):
+    return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET, ENTITY_LIST_OFFSET])
 
   def __iter__(self):
     return self
@@ -26,9 +32,11 @@ class EntityList():
   def __next__(self):
     # Check if list is empty, otherwise it is going to return memory garbage
     # Stop if first address changed, avoiding infinite loop while teleporting in the game
-    if (self.first() == self.base or self.first_address != self.first()):
+    if (self.first() == self.base() or self.first_address != self.first()):
       self.first_address = self.first()
       self.reset()
+      self.game.action.fighting_entity = None
+      self.game.world.player.current_action = "idle"
       raise StopIteration
 
     if self.current is not None:
@@ -46,22 +54,22 @@ class EntityList():
       self.entity_array.append(entity)
 
   def first(self):
-    return self.process.memory.read_ptr(self.base, 0x0)
+    return self.process.memory.read_ptr(self.base())
 
   def last(self):
-    return self.process.memory.read_ptr(self.base, 0x4)
+    return self.process.memory.read_ptr(self.base(), offset=0x4)
 
   def reset(self):
     self.current = self.first()
-    self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
+    self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, offset=ENTITY_OFFSET))
 
   def find_next(self):
     if self.current == self.last():
       self.current = None
       self.current_entity_instance = None
     else:
-      self.current = self.process.memory.read_ptr(self.current, 0x0)
-      self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, ENTITY_OFFSET))
+      self.current = self.process.memory.read_ptr(self.current)
+      self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, offset=ENTITY_OFFSET))
 
   def __str__(self):
     entity_list_string = "Entity list:\n"

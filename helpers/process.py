@@ -11,6 +11,7 @@ kernel32 = ctypes.windll.kernel32
 CHAR_SIZE = 1
 FLOAT_SIZE = 4
 EXECUTABLE_NAME = "ragna4th.exe"
+MAX_STR_LEN = 20
 
 
 class Memory(object):
@@ -48,20 +49,41 @@ class Memory(object):
     return self.read(ctypes.c_byte(), addr)
 
   def read_str(self, addr: int):
+    counter = 0
     buffer = ""
     read_bytes = self.read(ctypes.c_byte(), addr)
-    buffer += chr(read_bytes)
+    try:
+      buffer += chr(read_bytes)
+    except ValueError:
+      buffer += "-"
+    counter += 1
     addr += CHAR_SIZE
 
     while read_bytes != 0:
+      if counter > MAX_STR_LEN:
+        buffer += "\0"
+        return buffer
+
       read_bytes = self.read(ctypes.c_byte(), addr)
-      buffer += chr(read_bytes)
+      try:
+        buffer += chr(read_bytes)
+      except ValueError:
+        buffer += "-"
       addr += CHAR_SIZE
+      counter += 1
 
     return buffer
 
   def read_ptr(self, addr: int, offset=0x0):
     return self.read(ctypes.c_ulong(), addr + offset)
+
+  def read_ptr_chain(self, addr: int, pointers: [int], offset=0x0):
+    address = self.read_ptr(addr)
+
+    for pointer in pointers:
+      address = self.read_ptr(address + pointer)
+
+    return address + offset
 
   def write_u_int(self, value, addr: int):
     return self.write(ctypes.c_ulong, value, addr)

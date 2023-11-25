@@ -1,4 +1,5 @@
 from helpers.addresses import (
+  WORLD_BASE_INTERMED_OFFSET,
   PLAYER_BASE,
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
@@ -23,8 +24,10 @@ class Player():
 
   def __init__(self, game, world_base):
     self.game = game
-    self.base = self.game.process.memory.read_ptr(world_base, PLAYER_BASE)
     self.current_action = "idle"
+
+  def base(self):
+    return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [PLAYER_BASE])
 
   def name(self):
     return self.game.process.memory.read_str(self.game.base + PLAYER_NAME_OFFSET)
@@ -44,7 +47,7 @@ class Player():
     return None
 
   def coordinates(self):
-    return (self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(self.game.process.base + PLAYER_COORDINATE_Y_OFFSET))
+    return (self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_Y_OFFSET))
 
   def state(self):
-    return self.game.process.memory.read_u_int(self.base + STATE_OFFSET)
+    return self.game.process.memory.read_u_int(self.base() + STATE_OFFSET)
