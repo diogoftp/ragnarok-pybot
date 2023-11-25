@@ -1,5 +1,6 @@
 from helpers.addresses import (
   WORLD_BASE_INTERMED_OFFSET,
+  WORLD_BASE_OFFSET,
   PLAYER_BASE,
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
@@ -27,7 +28,7 @@ class Player():
     self.current_action = "idle"
 
   def base(self):
-    return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [PLAYER_BASE])
+    return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET, PLAYER_BASE])
 
   def name(self):
     return self.game.process.memory.read_str(self.game.base + PLAYER_NAME_OFFSET)
