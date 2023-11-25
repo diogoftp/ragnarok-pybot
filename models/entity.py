@@ -2,7 +2,7 @@ from helpers.addresses import (
   WORLD_BASE_INTERMED_OFFSET,
   WORLD_BASE_OFFSET,
   ENTITY_LIST_OFFSET,
-  ENTITY_LIST_SIZE,
+  ENTITY_LIST_SIZE_OFFSET,
   ENTITY_OFFSET,
   ID_OFFSET,
   COORDINATE_X_OFFSET,
@@ -25,6 +25,10 @@ class EntityList():
 
   def base(self):
     return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET, ENTITY_LIST_OFFSET])
+
+  def size(self):
+    address = self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET])
+    return self.game.process.memory.read_u_int(address + ENTITY_LIST_SIZE_OFFSET)
 
   def __iter__(self):
     return self
@@ -72,7 +76,7 @@ class EntityList():
       self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, offset=ENTITY_OFFSET))
 
   def __str__(self):
-    entity_list_string = "Entity list:\n"
+    entity_list_string = f"Entity list ({self.size()}):\n"
 
     for entity in self:
       entity_list_string += f"{entity}\n"

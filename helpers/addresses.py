@@ -17,6 +17,7 @@ WORLD_BASE_OFFSET = 0xCC
 # From world base address
 PLAYER_BASE = 0x2C
 ENTITY_LIST_OFFSET = 0x10
+ENTITY_LIST_SIZE_OFFSET = 0x14
 VIEW_OFFSET = 0xD0
 
 # From player base address
