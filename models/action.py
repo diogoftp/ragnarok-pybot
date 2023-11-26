@@ -24,8 +24,12 @@ class Action():
     self.game.world.player.current_action = "finding_target"
     self.game.world.entity_list.update_array()
 
+    if len(self.game.world.entity_list.entity_array) < 1:
+      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.A)
+      return
+
     for entity in self.game.world.entity_list.entity_array:
-      if entity.id() > 999 and entity.id() < 5000:
+      if entity.id() > 999 and entity.id() < 50000:
         self.fighting_entity = entity
         return self.fight()
 
