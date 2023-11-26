@@ -7,6 +7,8 @@ from helpers.addresses import (
   PLAYER_MAX_HP_OFFSET,
   PLAYER_COORDINATE_X_OFFSET,
   PLAYER_COORDINATE_Y_OFFSET,
+  PLAYER_SCREEN_COORD_X_OFFSET,
+  PLAYER_SCREEN_COORD_Y_OFFSET,
   MAP_NAME_OFFSET,
   STATE_OFFSET
 )
@@ -49,6 +51,9 @@ class Player():
 
   def coordinates(self):
     return (self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_Y_OFFSET))
+
+  def screen_coordinates(self):
+    return (self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_X_OFFSET), self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_Y_OFFSET))
 
   def state(self):
     return self.game.process.memory.read_u_int(self.base() + STATE_OFFSET)

@@ -16,6 +16,7 @@ class Input():
 class Keyboard():
   class VKEYS():
     F1 = 0x70
+    F2 = 0x71
     Z = 0x5A
     A = 0x41
     END = 0x23

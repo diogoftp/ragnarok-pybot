@@ -1,5 +1,6 @@
 from threading import Thread
 from time import sleep
+import random
 
 
 class Macro():
@@ -19,10 +20,13 @@ class Macro():
     while self.thread_running:
       print("Macro thread running")
       if self.active:
-        self.game.input.keyboard.send_key(self.input.keyboard.VKEYS.Z)
+        self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2)
         sleep(0.1)
-        self.game.input.mouse.send_click(None)
+        rand = (random.randint(-10, 10), random.randint(-10, 10))
+        coords = tuple(map(sum,zip(self.game.world.player.screen_coordinates(), rand)))
+        self.game.input.mouse.set_game_mouse_pos(coords + rand, game_coords=False)
         sleep(0.1)
-        self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.A)
+        self.game.input.mouse.send_click()
+        self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F1)
         sleep(0.1)
       sleep(0.1)

@@ -22,6 +22,8 @@ VIEW_OFFSET = 0xD0
 
 # From player base address
 STATE_OFFSET = 0x70
+PLAYER_SCREEN_COORD_X_OFFSET = 0xAC
+PLAYER_SCREEN_COORD_Y_OFFSET = 0xB0
 
 # From entity list address
 ENTITY_OFFSET = 0x8

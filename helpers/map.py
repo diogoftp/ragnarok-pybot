@@ -3,7 +3,7 @@ import winsound
 
 # For zoom = 400 and vertical angle = -50
 CELL_PIXEL_SIZE = (31, 25)
-ALLOWED_MAPS = ["moc_fild13"]
+ALLOWED_MAPS = ["moc_fild13", "abyss_04", "moscovia"]
 
 
 class Map():

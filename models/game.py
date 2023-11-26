@@ -16,7 +16,7 @@ class Game():
     self.process = Process()
     self.base = self.process.base
     self.running = True
-    self.active = True
+    self.active = False
     self.world = World(self)
     self.window = Window(self)
     self.input = Input(self)
@@ -31,7 +31,7 @@ class Game():
     game_string += f"Player name: {self.world.player.name()} ({self.world.player.current_action})\n"
     game_string += f"Player HP: {self.world.player.hp()}/{self.world.player.max_hp()}\n"
     game_string += f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})\n"
-    game_string += f"Map name: {self.world.player.map_name()} {coords}\n"
+    game_string += f"Map name: {self.world.player.map_name()} {coords} {self.world.player.screen_coordinates()}\n"
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
     game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}\n"
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
