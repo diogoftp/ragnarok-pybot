@@ -33,7 +33,6 @@ class Game():
 
     coords = self.world.player.coordinates()
     game_string = ""
-    game_string = f"{self.world.is_chat_bar_enbaled()}\n"
     game_string += f"Player name: {self.world.player.name()} ({self.world.player.current_action})\n"
     game_string += f"Player HP and SP: {self.world.player.hp()}/{self.world.player.max_hp()} | {self.world.player.sp()}/{self.world.player.max_sp()} | {hp_percent} {sp_percent}\n"
     game_string += f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})\n"
