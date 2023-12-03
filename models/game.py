@@ -9,6 +9,7 @@ from models.world import World
 from models.player import Player
 from models.macro import Macro
 from models.action import Action
+from models.inventory import Inventory
 
 
 class Game():
@@ -18,6 +19,7 @@ class Game():
     self.running = True
     self.active = False
     self.world = World(self)
+    self.inventory = Inventory(self, self.process)
     self.window = Window(self)
     self.input = Input(self)
     self.macro = Macro(self)
@@ -43,6 +45,7 @@ class Game():
     game_string += f"Bot active?: {self.active}\n"
     game_string += f"Currently fighting: {self.action.fighting_entity}\n"
     game_string += str(self.world.entity_list)
+    game_string += str(self.inventory)
     return game_string
 
   def loop(self):
