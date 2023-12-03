@@ -49,3 +49,27 @@ class Action():
       self.game.input.mouse.set_game_mouse_pos(self.fighting_entity.screen_coords(), game_coords=False)
       self.game.input.mouse.send_click()
       sleep(0.1)
+
+  def go_to_town(self):
+    self.game.world.enable_chat_bar()
+    self.game.world.write_to_chat_bar("@go 18")
+    sleep(0.8)
+    self.game.world.disable_chat_bar()
+
+    # Talk to healer
+    self.game.world.entity_list.update_array()
+    for entity in self.game.world.entity_list:
+      if entity.name() == "f_leedsh":
+        self.game.input.mouse.set_game_mouse_pos(entity.screen_coords(), game_coords=False)
+        self.game.input.mouse.send_click()
+    sleep(1)
+
+    # Talk to warper
+    self.game.world.entity_list.update_array()
+    for entity in self.game.world.entity_list:
+      if entity.name() == "ep18_miriam":
+        self.game.input.mouse.set_game_mouse_pos(entity.screen_coords(), game_coords=False)
+        self.game.input.mouse.send_click()
+        sleep(1)
+        self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.ENTER)
+    sleep(1)

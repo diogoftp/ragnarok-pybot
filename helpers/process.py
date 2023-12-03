@@ -102,6 +102,9 @@ class Memory(object):
   def write_byte_array(self, buffer, addr: int):
     return self.write(ctypes.c_byte, buffer, addr)
 
+  def write_byte(self, value, addr: int):
+    return self.write(ctypes.c_byte, value, addr)
+
 
 class Process(object):
   PROCESS_VM_READ = 0x0010

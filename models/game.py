@@ -26,10 +26,14 @@ class Game():
     self.world.view.set_default_camera_angles()
 
   def __str__(self):
+    hp_percent = self.world.player.hp() / self.world.player.max_hp()
+    sp_percent = self.world.player.sp() / self.world.player.max_sp()
+
     coords = self.world.player.coordinates()
     game_string = ""
+    game_string = f"{self.world.is_chat_bar_enbaled()}\n"
     game_string += f"Player name: {self.world.player.name()} ({self.world.player.current_action})\n"
-    game_string += f"Player HP: {self.world.player.hp()}/{self.world.player.max_hp()}\n"
+    game_string += f"Player HP and SP: {self.world.player.hp()}/{self.world.player.max_hp()} | {self.world.player.sp()}/{self.world.player.max_sp()} | {hp_percent} {sp_percent}\n"
     game_string += f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})\n"
     game_string += f"Map name: {self.world.player.map_name()} {coords} {self.world.player.screen_coordinates()}\n"
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
@@ -46,6 +50,15 @@ class Game():
       self.refresh_game_data()
       self.print_game_state()
       self.input.keyboard.listen_keys()
+
+      hp_percent = self.world.player.hp() / self.world.player.max_hp()
+      sp_percent = self.world.player.sp() / self.world.player.max_sp()
+      if hp_percent < 0.2 or sp_percent < 0.2:
+        self.macro.active = False
+        sleep(0.1)
+        self.action.go_to_town()
+        sleep(0.1)
+        self.macro.active = True
 
       if self.active:
         self.execute_actions()
@@ -69,6 +82,8 @@ class Game():
       self.action.fight()
     elif self.world.player.current_action == "finding_target":
       pass
+    elif self.world.player.current_action == "healing":
+      self.action.go_to_town()
 
   def toggle_bot(self, active=None):
     if active is None:
@@ -78,5 +93,5 @@ class Game():
     else:
       self.active = False
 
-    if not self.active:
+    if self.active:
       self.world.view.set_default_camera_angles()

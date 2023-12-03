@@ -5,6 +5,8 @@ from helpers.addresses import (
   PLAYER_NAME_OFFSET,
   PLAYER_CURRENT_HP_OFFSET,
   PLAYER_MAX_HP_OFFSET,
+  PLAYER_CURRENT_SP_OFFSET,
+  PLAYER_MAX_SP_OFFSET,
   PLAYER_COORDINATE_X_OFFSET,
   PLAYER_COORDINATE_Y_OFFSET,
   PLAYER_SCREEN_COORD_X_OFFSET,
@@ -40,6 +42,12 @@ class Player():
 
   def max_hp(self):
     return self.game.process.memory.read_u_int(self.game.base + PLAYER_MAX_HP_OFFSET)
+
+  def sp(self):
+    return self.game.process.memory.read_u_int(self.game.base + PLAYER_CURRENT_SP_OFFSET)
+
+  def max_sp(self):
+    return self.game.process.memory.read_u_int(self.game.base + PLAYER_MAX_SP_OFFSET)
 
   def map_name(self):
     name = self.game.process.memory.read_str(self.game.base + MAP_NAME_OFFSET)

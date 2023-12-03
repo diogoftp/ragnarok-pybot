@@ -2,6 +2,7 @@ import win32api
 import win32gui
 import win32.lib.win32con as win32con
 from time import sleep
+from ctypes import windll
 
 from helpers.addresses import MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 
@@ -21,6 +22,8 @@ class Keyboard():
     A = 0x41
     END = 0x23
     HOME = 0x24
+    ENTER = 0x0D
+    LSHIFT = 0xA0
 
   def __init__(self, game):
     self.game = game
@@ -47,11 +50,23 @@ class Keyboard():
 
     return False
 
-  def send_key(self, key):
+  def send_key(self, key, only_down=False):
     win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0)
-    sleep(0.05)
-    win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0)
+    if not only_down:
+      sleep(0.05)
+      win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0)
 
+  def send_string(self, string):
+    for key in string:
+      if key == "@":
+        win32api.PostMessage(self.game.window.handle, win32con.WM_CHAR, 0x40, 30001) # Reproduce message captured using Spy++
+      else:
+        self.send_key(self.char_to_vkey(key), only_down=True)
+
+  def char_to_vkey(self, char):
+    result = windll.User32.VkKeyScanW(ord(char))
+    shift_state = (result & 0xFF00) >> 8
+    return result & 0xFF
 
 class Mouse():
   def __init__(self, game):
