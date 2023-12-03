@@ -63,6 +63,13 @@ class Game():
         sleep(0.1)
         self.macro.active = True
 
+      if self.inventory.item_quantity(1772) < 2000:
+        self.macro.active = False
+        sleep(0.1)
+        self.action.restock_arrow()
+        sleep(0.1)
+        self.macro.active = True
+
       if self.active:
         self.execute_actions()
 

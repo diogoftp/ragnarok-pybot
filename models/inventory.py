@@ -49,6 +49,13 @@ class Inventory():
 
     return inventory_string
 
+  def item_quantity(self, item_id):
+    for item in self:
+      if item.id() == item_id:
+        return item.quantity()
+
+    return 0
+
 
 class Item():
   def __init__(self, process, base):
@@ -59,7 +66,8 @@ class Item():
     return f"{self.id()} ({self.quantity()})"
 
   def id(self):
-    return self.process.memory.read_str(self.base + ITEM_ID_OFFSET)
+    # Must remove '\0' from the end of string to cast to int
+    return int(self.process.memory.read_str(self.base + ITEM_ID_OFFSET)[:-1])
 
   def quantity(self):
-    return int(self.process.memory.read_u_int(self.base + ITEM_QUANTITY_OFFSET))
+    return self.process.memory.read_u_int(self.base + ITEM_QUANTITY_OFFSET)

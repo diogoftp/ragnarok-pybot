@@ -73,3 +73,9 @@ class Action():
         sleep(1)
         self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.ENTER)
     sleep(1)
+
+  def restock_arrow(self):
+    self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F6)
+    sleep(0.1)
+    self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F6)
+    sleep(0.1)
