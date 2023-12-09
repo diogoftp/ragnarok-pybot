@@ -3,7 +3,6 @@ import win32gui
 import win32.lib.win32con as win32con
 from time import sleep
 from ctypes import windll
-from threading import Thread
 
 from helpers.addresses import MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 from helpers.mouse_blocker import MouseBlocker
