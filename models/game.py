@@ -40,7 +40,7 @@ class Game():
     game_string += f"Map name: {self.world.player.map_name()} {coords} {self.world.player.screen_coordinates()}\n"
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
     game_string += f"Is talking to npc? {self.world.player.is_talking_to_npc()}\n"
-    game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}\n"
+    game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}. Locked? {self.input.mouse.mouse_blocker.is_running()}\n"
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
     game_string += f"Macro active?: {self.macro.active}\n"
     game_string += f"Bot active?: {self.active}\n"

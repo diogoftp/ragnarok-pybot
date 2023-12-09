@@ -27,6 +27,8 @@ class Keyboard():
     HOME = 0x24
     ENTER = 0x0D
     LSHIFT = 0xA0
+    PGUP = 0x21
+    PGDOWN = 0x22
 
   def __init__(self, game):
     self.game = game
@@ -39,6 +41,8 @@ class Keyboard():
       self.game.macro.active = not self.game.macro.active
     if self.pressed(self.VKEYS.HOME):
       self.game.toggle_bot()
+    if self.pressed(self.VKEYS.PGUP):
+      self.game.input.mouse.mouse_blocker.toggle()
 
   def pressed(self, key):
     key_state = win32api.GetKeyState(key)
@@ -74,11 +78,7 @@ class Keyboard():
 class Mouse():
   def __init__(self, game):
     self.game = game
-    self.set_mouse_blocker()
-
-  def set_mouse_blocker(self):
-    self.thread = Thread(target=MouseBlocker, daemon=True)
-    self.thread.start()
+    self.mouse_blocker = MouseBlocker()
 
   def get_current_mouse_pos(self):
     return win32gui.ScreenToClient(self.game.window.handle, win32api.GetCursorPos())
