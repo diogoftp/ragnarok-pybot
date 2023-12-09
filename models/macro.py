@@ -9,7 +9,7 @@ class Macro():
     self.active = False
     self.game = game
 
-    self.thread = Thread(target=self.macro_loop)
+    self.thread = Thread(target=self.macro_loop, daemon=True)
     self.thread.start()
 
   def stop(self):
