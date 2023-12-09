@@ -3,8 +3,10 @@ import win32gui
 import win32.lib.win32con as win32con
 from time import sleep
 from ctypes import windll
+from threading import Thread
 
 from helpers.addresses import MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
+from helpers.mouse_blocker import MouseBlocker
 
 
 class Input():
@@ -72,6 +74,11 @@ class Keyboard():
 class Mouse():
   def __init__(self, game):
     self.game = game
+    self.set_mouse_blocker()
+
+  def set_mouse_blocker(self):
+    self.thread = Thread(target=MouseBlocker, daemon=True)
+    self.thread.start()
 
   def get_current_mouse_pos(self):
     return win32gui.ScreenToClient(self.game.window.handle, win32api.GetCursorPos())

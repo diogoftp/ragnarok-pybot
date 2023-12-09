@@ -52,9 +52,11 @@ class Action():
 
   def go_to_town(self):
     self.game.world.enable_chat_bar()
+    sleep(0.3)
     self.game.world.write_to_chat_bar("@go 18")
     sleep(0.8)
     self.game.world.disable_chat_bar()
+    sleep(0.1)
 
     # Talk to healer
     self.game.world.entity_list.update_array()
