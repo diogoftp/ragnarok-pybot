@@ -1,5 +1,6 @@
 import os
 from time import sleep
+from pygame import mixer
 
 from helpers.process import Process
 from helpers.window import Window
@@ -38,6 +39,7 @@ class Game():
     game_string += f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})\n"
     game_string += f"Map name: {self.world.player.map_name()} {coords} {self.world.player.screen_coordinates()}\n"
     game_string += f"Is cell walkable? {self.map.walkable(coords)} (type {self.map.read_coords(coords)}) ({self.map.width}, {self.map.height})\n"
+    game_string += f"Is talking to npc? {self.world.player.is_talking_to_npc()}\n"
     game_string += f"Mouse pos: {self.input.mouse.get_current_mouse_pos()}\n"
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
     game_string += f"Macro active?: {self.macro.active}\n"
@@ -61,6 +63,14 @@ class Game():
         self.action.go_to_town()
         sleep(0.1)
         self.macro.active = True
+
+      if self.world.player.is_talking_to_npc() and (not self.map.is_safe_map()):
+        self.macro.active = False
+        self.active = False
+        mixer.init()
+        mixer.music.load("cops.mp3")
+        mixer.music.play()
+        sleep(1)
 
       if self.inventory.item_quantity(1772) < 2000:
         self.macro.active = False

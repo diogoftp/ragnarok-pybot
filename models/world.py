@@ -18,6 +18,9 @@ class World():
     self.entity_list = EntityList(self.game.process, self.game)
     self.view = View(self.game)
 
+  def intermed_base(self):
+    return self.game.process.memory.read_ptr(self.game.base + WORLD_BASE_INTERMED_OFFSET)
+
   def base(self):
     return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET])
 

@@ -12,7 +12,8 @@ from helpers.addresses import (
   PLAYER_SCREEN_COORD_X_OFFSET,
   PLAYER_SCREEN_COORD_Y_OFFSET,
   MAP_NAME_OFFSET,
-  STATE_OFFSET
+  STATE_OFFSET,
+  IS_TALKING_TO_NPC_OFFSET
 )
 
 
@@ -65,3 +66,6 @@ class Player():
 
   def state(self):
     return self.game.process.memory.read_u_int(self.base() + STATE_OFFSET)
+
+  def is_talking_to_npc(self):
+    return bool(self.game.process.memory.read_u_int(self.game.world.intermed_base() + IS_TALKING_TO_NPC_OFFSET))

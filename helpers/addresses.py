@@ -18,6 +18,7 @@ MAP_NAME_OFFSET = 0xB3D1D8
 
 # From world base intermed address
 WORLD_BASE_OFFSET = 0xCC
+IS_TALKING_TO_NPC_OFFSET = 0x258
 
 # From world base address
 PLAYER_BASE = 0x2C

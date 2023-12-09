@@ -67,7 +67,10 @@ class Item():
 
   def id(self):
     # Must remove '\0' from the end of string to cast to int
-    return int(self.process.memory.read_str(self.base + ITEM_ID_OFFSET)[:-1])
+    try:
+      return int(self.process.memory.read_str(self.base + ITEM_ID_OFFSET)[:-1])
+    except ValueError:
+      return -1
 
   def quantity(self):
     return self.process.memory.read_u_int(self.base + ITEM_QUANTITY_OFFSET)

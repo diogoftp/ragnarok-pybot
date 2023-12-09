@@ -1,9 +1,10 @@
 import struct
-import winsound
+from pygame import mixer
 
 # For zoom = 400 and vertical angle = -50
 CELL_PIXEL_SIZE = (31, 25)
-ALLOWED_MAPS = ["moc_fild13", "abyss_04", "moscovia"]
+ALLOWED_MAPS = ["moc_fild13", "abyss_04", "ayothaya"]
+SAFE_MAPS = ["ayothaya"]
 
 
 class Map():
@@ -55,7 +56,9 @@ class Map():
 
   def check_is_allowed_map(self):
     if (self.current_map not in ALLOWED_MAPS) and (not self.last_map_unallowed):
-      winsound.PlaySound("unallowed_map.wav", winsound.SND_FILENAME | winsound.SND_ASYNC)
+      mixer.init()
+      mixer.music.load("unallowed_map.mp3")
+      mixer.music.play()
       self.last_bot_status = self.game.active
       self.last_macro_status = self.game.macro.active
       self.last_map_unallowed = True
@@ -85,3 +88,6 @@ class Map():
 
   def walk_to(self, destination):
     pass
+
+  def is_safe_map(self):
+    return self.game.world.player.map_name() in SAFE_MAPS
