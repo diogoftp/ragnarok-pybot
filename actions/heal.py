@@ -51,5 +51,6 @@ class Heal():
       sleep(1)
 
     if (self.game.world.player.map_name() == TARGET_MAP) and not self.should_heal():
+      self.game.world.disable_chat_bar()
       self.game.macro.start()
       self.game.world.player.current_action = "idle"

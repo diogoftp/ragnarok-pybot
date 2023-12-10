@@ -45,7 +45,7 @@ class Inventory():
     inventory_string = f"Inventory ({self.quantity()}):\n"
 
     for item in self:
-      inventory_string += f"{item}\n"
+      inventory_string += f"{item}, "
 
     return inventory_string
 
