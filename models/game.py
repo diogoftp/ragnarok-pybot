@@ -52,13 +52,7 @@ class Game():
       self.print_game_state()
       self.input.keyboard.listen_keys()
 
-      if self.action.heal.should_heal() or self.world.player.current_action == "healing":
-        self.action.heal.heal()
-        continue
-
-      if self.action.restock_arrow.should_restock() or self.world.player.current_action == "restocking_arrow":
-        self.action.restock_arrow.restock()
-        continue
+      self.map.check_is_allowed_map()
 
       if self.world.player.is_talking_to_npc() and (not self.map.is_safe_map()):
         self.macro.stop()
@@ -67,6 +61,15 @@ class Game():
         mixer.music.load("cops.mp3")
         mixer.music.play()
         sleep(1)
+        continue
+
+      if self.action.heal.should_heal() or self.world.player.current_action == "healing":
+        self.action.heal.heal()
+        continue
+
+      if self.action.restock_arrow.should_restock() or self.world.player.current_action == "restocking_arrow":
+        self.action.restock_arrow.restock()
+        continue
 
       if self.active:
         self.execute_actions()
@@ -77,7 +80,6 @@ class Game():
 
   def refresh_game_data(self):
     self.map.reload()
-    self.map.check_is_allowed_map()
 
   def print_game_state(self):
     os.system("cls")

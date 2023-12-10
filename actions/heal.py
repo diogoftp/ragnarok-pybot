@@ -7,7 +7,13 @@ class Heal():
     self.game = game
 
   def should_heal(self):
-    return self.game.world.player.hp_percent() < 0.2 or self.game.world.player.sp_percent() < 0.1
+    if self.game.world.player.map_name() == TOWN:
+      hp_threshold = 1
+      sp_threshold = 1
+    else:
+      hp_threshold = 0.2
+      sp_threshold = 0.1
+    return self.game.world.player.hp_percent() < hp_threshold or self.game.world.player.sp_percent() < sp_threshold
 
   def heal(self):
     self.game.world.player.current_action = "healing"
