@@ -5,6 +5,7 @@ from helpers.map import TARGET_MAP, TOWN
 class Heal():
   def __init__(self, game):
     self.game = game
+    self.last_action = self.game.world.player.current_action
 
   def should_heal(self):
     if self.game.world.player.map_name() == TOWN:
@@ -13,9 +14,13 @@ class Heal():
     else:
       hp_threshold = 0.2
       sp_threshold = 0.1
+
     return self.game.world.player.hp_percent() < hp_threshold or self.game.world.player.sp_percent() < sp_threshold
 
   def heal(self):
+    if self.game.world.player.current_action != "healing":
+      self.last_action = self.game.world.player.current_action
+
     self.game.world.player.current_action = "healing"
 
     if self.game.macro.active:
@@ -59,6 +64,6 @@ class Heal():
 
     if (self.game.world.player.map_name() == TARGET_MAP) and not self.should_heal():
       self.game.world.disable_chat_bar()
-      self.game.world.player.current_action = "idle"
+      self.game.world.player.current_action = self.last_action
       self.game.macro.start()
       return
