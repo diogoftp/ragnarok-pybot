@@ -58,14 +58,14 @@ class Game():
       hp_percent = self.world.player.hp() / self.world.player.max_hp()
       sp_percent = self.world.player.sp() / self.world.player.max_sp()
       if hp_percent < 0.2 or sp_percent < 0.2:
-        self.macro.active = False
+        self.macro.stop()
         sleep(0.1)
         self.action.go_to_town()
         sleep(0.1)
-        self.macro.active = True
+        self.macro.start()
 
       if self.world.player.is_talking_to_npc() and (not self.map.is_safe_map()):
-        self.macro.active = False
+        self.macro.stop()
         self.active = False
         mixer.init()
         mixer.music.load("cops.mp3")
@@ -73,11 +73,11 @@ class Game():
         sleep(1)
 
       if self.inventory.item_quantity(1772) < 2000:
-        self.macro.active = False
+        self.macro.stop()
         sleep(0.1)
         self.action.restock_arrow()
         sleep(0.1)
-        self.macro.active = True
+        self.macro.start()
 
       if self.active:
         self.execute_actions()

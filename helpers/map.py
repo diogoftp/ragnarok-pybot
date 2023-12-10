@@ -16,7 +16,6 @@ class Map():
     self.height = None
     self.last_map_unallowed = False
     self.last_bot_status = self.game.active
-    self.last_macro_status = self.game.macro.active
     self.reload()
 
   def load_file(self):
@@ -60,14 +59,13 @@ class Map():
       mixer.music.load("unallowed_map.mp3")
       mixer.music.play()
       self.last_bot_status = self.game.active
-      self.last_macro_status = self.game.macro.active
       self.last_map_unallowed = True
       self.game.toggle_bot(active=False)
-      self.game.macro.active = False
+      self.game.macro.stop()
     elif (self.current_map in ALLOWED_MAPS) and (self.last_map_unallowed):
       self.last_map_unallowed = False
       self.game.toggle_bot(active=self.last_bot_status)
-      self.game.macro.active = self.last_macro_status
+      self.game.macro.start()
 
   def read_coords(self, coords):
     if len(self.map) == 0:

@@ -35,7 +35,7 @@ class MouseBlocker():
 
   def __init__(self):
     self.hook = None
-    self.current_thread = None
+    self.thread = None
     self.start()
 
   def __del__(self):
@@ -52,13 +52,13 @@ class MouseBlocker():
       self.start()
 
   def start(self):
-    self.current_thread = Thread(target=self.start_in_thread, daemon=True)
-    self.current_thread.start()
+    self.thread = Thread(target=self.start_in_thread, daemon=True)
+    self.thread.start()
 
   def stop(self):
-    if self.current_thread is not None:
-      win32api.PostThreadMessage(self.current_thread.ident, win32con.WM_QUIT, 0, 0)
-      self.current_thread = None
+    if self.thread is not None:
+      win32api.PostThreadMessage(self.thread.ident, win32con.WM_QUIT, 0, 0)
+      self.thread = None
 
     if self.hook is not None:
       windll.user32.UnhookWindowsHookEx(self.hook)

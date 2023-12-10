@@ -37,7 +37,7 @@ class Keyboard():
     if self.pressed(self.VKEYS.END):
       self.game.running = False
     if self.pressed(self.VKEYS.F1):
-      self.game.macro.active = not self.game.macro.active
+      self.game.macro.toggle()
     if self.pressed(self.VKEYS.HOME):
       self.game.toggle_bot()
     if self.pressed(self.VKEYS.PGUP):
