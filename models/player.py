@@ -44,11 +44,17 @@ class Player():
   def max_hp(self):
     return self.game.process.memory.read_u_int(self.game.base + PLAYER_MAX_HP_OFFSET)
 
+  def hp_percent(self):
+    return self.hp() / self.max_hp()
+
   def sp(self):
     return self.game.process.memory.read_u_int(self.game.base + PLAYER_CURRENT_SP_OFFSET)
 
   def max_sp(self):
     return self.game.process.memory.read_u_int(self.game.base + PLAYER_MAX_SP_OFFSET)
+
+  def sp_percent(self):
+    return self.sp() / self.max_sp()
 
   def map_name(self):
     name = self.game.process.memory.read_str(self.game.base + MAP_NAME_OFFSET)

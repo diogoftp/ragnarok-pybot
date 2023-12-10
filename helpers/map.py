@@ -5,6 +5,8 @@ from pygame import mixer
 CELL_PIXEL_SIZE = (31, 25)
 ALLOWED_MAPS = ["moc_fild13", "abyss_04", "ayothaya"]
 SAFE_MAPS = ["ayothaya"]
+TOWN = "ayothaya"
+TARGET_MAP = "abyss_04"
 
 
 class Map():

@@ -59,7 +59,7 @@ class Keyboard():
   def send_key(self, key, only_down=False):
     win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0)
     if not only_down:
-      sleep(0.05)
+      sleep(0.1)
       win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0)
 
   def send_string(self, string):
