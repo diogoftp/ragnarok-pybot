@@ -40,7 +40,6 @@ class EntityList():
       self.first_address = self.first()
       self.reset()
       self.game.action.fighting_entity = None
-      self.game.world.player.current_action = "idle"
       raise StopIteration
 
     if self.current is not None:

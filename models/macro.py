@@ -33,7 +33,7 @@ class Macro():
         sleep(0.01)
         continue
 
-      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2, only_down=True)
+      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2, only_down=False)
       sleep(0.05)
       rand = (random.randint(-10, 10), random.randint(-10, 10))
       coords = tuple(map(sum,zip(self.game.world.player.screen_coordinates(), rand)))
