@@ -29,15 +29,19 @@ class Macro():
 
   def macro_loop(self):
     while self.active:
-      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2)
-      sleep(0.1)
+      if self.game.world.player.is_in_delay():
+        sleep(0.01)
+        continue
+
+      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2, only_down=True)
+      sleep(0.05)
       rand = (random.randint(-10, 10), random.randint(-10, 10))
       coords = tuple(map(sum,zip(self.game.world.player.screen_coordinates(), rand)))
       self.game.input.mouse.set_game_mouse_pos(coords + rand, game_coords=False)
-      sleep(0.1)
+      sleep(0.05)
       self.game.input.mouse.send_click()
-      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F1)
       sleep(0.1)
-    sleep(0.1)
+      self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F1)
+      sleep(0.05)
 
     self.thread = None
