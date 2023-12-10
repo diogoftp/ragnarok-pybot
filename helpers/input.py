@@ -1,6 +1,7 @@
 import win32api
 import win32gui
 import win32.lib.win32con as win32con
+import random
 from time import sleep
 from ctypes import windll
 
@@ -59,7 +60,9 @@ class Keyboard():
   def send_key(self, key, only_down=False):
     win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0)
     if not only_down:
-      sleep(0.1)
+      # Sleep randomly between 0.1 and 0.2 seconds
+      rand = round(random.uniform(0.1, 0.2), 10)
+      sleep(rand)
       win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0)
 
   def send_string(self, string):
