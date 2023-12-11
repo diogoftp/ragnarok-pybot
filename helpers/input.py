@@ -57,20 +57,19 @@ class Keyboard():
 
     return False
 
-  def send_key(self, key, only_down=False):
-    win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0)
-    if not only_down:
-      # Sleep randomly between 0.1 and 0.2 seconds
-      rand = round(random.uniform(0.1, 0.2), 10)
-      sleep(rand)
-      win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0)
+  def send_key(self, key):
+    win32api.PostMessage(self.game.window.handle, win32con.WM_KEYDOWN, key, 0x00000001)
+    # Sleep randomly between 0.15 and 0.2 seconds
+    rand = round(random.uniform(0.15, 0.2), 10)
+    sleep(rand)
+    win32api.PostMessage(self.game.window.handle, win32con.WM_KEYUP, key, 0xC0000001)
 
   def send_string(self, string):
     for key in string:
       if key == "@":
         win32api.PostMessage(self.game.window.handle, win32con.WM_CHAR, 0x40, 30001) # Reproduce message captured using Spy++
       else:
-        self.send_key(self.char_to_vkey(key), only_down=True)
+        self.send_key(self.char_to_vkey(key))
 
   def char_to_vkey(self, char):
     result = windll.User32.VkKeyScanW(ord(char))
@@ -106,6 +105,7 @@ class Mouse():
       win32api.SetCursorPos(screen_destination)
       lParam = win32api.MAKELONG(screen_destination[0], screen_destination[1])
 
+    win32gui.PostMessage(self.game.window.handle, win32con.WM_SETCURSOR, self.game.window.handle, 0x02010001)
     win32gui.PostMessage(self.game.window.handle, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
     sleep(0.05)
-    win32gui.PostMessage(self.game.window.handle, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, lParam)
+    win32gui.PostMessage(self.game.window.handle, win32con.WM_LBUTTONUP, 0, lParam)
