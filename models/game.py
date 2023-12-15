@@ -53,11 +53,14 @@ class Game():
       self.refresh_game_data()
       self.print_game_state()
       self.input.keyboard.listen_keys()
+      self.check_safety_conditions()
 
-      if self.active:
-        self.check_safety_conditions()
+      if self.active or self.macro.active:
         self.world.player.current_action = self.set_current_state()
         self.execute_actions()
+
+      if self.world.player.current_action == "healing":
+        self.action.heal.heal()
 
       sleep(0.1)
 
@@ -83,19 +86,18 @@ class Game():
       return
 
   def set_current_state(self):
-    # if self.action.heal.should_heal():
-    #   return "healing"
-    # if self.action.restock_arrow.should_restock():
-    #   return "restocking_arrow"
-    if len(self.map.map) > 0 and len(list(self.world.entity_list)) == 0:
+    if self.action.heal.should_heal():
+      return "healing"
+    if self.action.restock_arrow.should_restock():
+      return "restocking_arrow"
+    if not self.macro.active and len(self.map.map) > 0 and len(list(self.world.entity_list)) == 0:
       return "walking"
-    if len(list(self.world.entity_list)) > 0:
+    if not self.macro.active and len(list(self.world.entity_list)) > 0:
       return "fighting"
+
     return "idle"
 
   def execute_actions(self):
-    if self.world.player.current_action == "healing":
-      self.action.heal.heal()
     if self.world.player.current_action == "restocking_arrow":
       self.action.restock_arrow.restock()
     if self.world.player.current_action == "walking":
