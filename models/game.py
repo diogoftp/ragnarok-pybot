@@ -1,4 +1,5 @@
 import os
+import ctypes
 from time import sleep
 from pygame import mixer
 
@@ -6,6 +7,7 @@ from helpers.process import Process
 from helpers.window import Window
 from helpers.input import Input
 from helpers.map import Map
+from actions.walk import Walk
 from models.world import World
 from models.player import Player
 from models.macro import Macro
@@ -31,7 +33,7 @@ class Game():
   def __str__(self):
     coords = self.world.player.coordinates()
     game_string = ""
-    game_string += f"Player name: {self.world.player.name()} ({self.world.player.current_action})\n"
+    game_string += f"Player name: {self.world.player.name()} ({self.world.player.current_action}), walking to {self.action.walk.destination}\n"
     game_string += f"Player HP and SP: {self.world.player.hp()}/{self.world.player.max_hp()} | {self.world.player.sp()}/{self.world.player.max_sp()}\n"
     game_string += f"Player state: {self.world.player.state()} ({self.world.player.state_map.get(self.world.player.state(), "unknown")})\n"
     game_string += f"Map name: {self.world.player.map_name()} {coords} {self.world.player.screen_coordinates()}\n"
@@ -41,7 +43,7 @@ class Game():
     game_string += f"View: {self.world.view.horizontal_camera_angle()}, {self.world.view.vertical_camera_angle()}, {self.world.view.camera_zoom()}\n"
     game_string += f"Macro active?: {self.macro.active}\n"
     game_string += f"Bot active?: {self.active}\n"
-    game_string += f"Currently fighting: {self.action.fighting_entity}\n"
+    game_string += f"Currently fighting: {self.action.fight.fighting_entity}\n"
     game_string += str(self.world.entity_list)
     game_string += str(self.inventory)
     return game_string
@@ -52,26 +54,9 @@ class Game():
       self.print_game_state()
       self.input.keyboard.listen_keys()
 
-      self.map.check_is_allowed_map()
-
-      if self.world.player.is_talking_to_npc() and (not self.map.is_safe_map()):
-        self.macro.stop()
-        self.active = False
-        mixer.init()
-        mixer.music.load("cops.mp3")
-        mixer.music.play()
-        sleep(1)
-        continue
-
-      if self.action.heal.should_heal() or self.world.player.current_action == "healing":
-        self.action.heal.heal()
-        continue
-
-      if self.action.restock_arrow.should_restock() or self.world.player.current_action == "restocking_arrow":
-        self.action.restock_arrow.restock()
-        continue
-
       if self.active:
+        self.check_safety_conditions()
+        self.world.player.current_action = self.set_current_state()
         self.execute_actions()
 
       sleep(0.1)
@@ -85,13 +70,38 @@ class Game():
     os.system("cls")
     print(self)
 
+  def check_safety_conditions(self):
+    self.map.check_is_allowed_map()
+
+    if self.world.player.is_talking_to_npc() and (not self.map.is_safe_map()):
+      self.macro.stop()
+      self.active = False
+      mixer.init()
+      mixer.music.load("cops.mp3")
+      mixer.music.play()
+      sleep(1)
+      return
+
+  def set_current_state(self):
+    # if self.action.heal.should_heal():
+    #   return "healing"
+    # if self.action.restock_arrow.should_restock():
+    #   return "restocking_arrow"
+    if len(self.map.map) > 0 and len(list(self.world.entity_list)) == 0:
+      return "walking"
+    if len(list(self.world.entity_list)) > 0:
+      return "fighting"
+    return "idle"
+
   def execute_actions(self):
-    if self.world.player.current_action == "idle":
-      self.action.find_target()
-    elif self.world.player.current_action == "fighting":
-      self.action.fight()
-    elif self.world.player.current_action == "finding_target":
-      pass
+    if self.world.player.current_action == "healing":
+      self.action.heal.heal()
+    if self.world.player.current_action == "restocking_arrow":
+      self.action.restock_arrow.restock()
+    if self.world.player.current_action == "walking":
+      self.action.walk.step()
+    if self.world.player.current_action == "fighting":
+      self.action.fight.fight()
 
   def toggle_bot(self, active=None):
     if active is None:

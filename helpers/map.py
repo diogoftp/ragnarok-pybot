@@ -83,11 +83,5 @@ class Map():
 
     return tile_type == 0 or tile_type == 3
 
-  def route_to(self, destination):
-    pass
-
-  def walk_to(self, destination):
-    pass
-
   def is_safe_map(self):
     return self.game.world.player.map_name() in SAFE_MAPS
