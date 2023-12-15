@@ -73,7 +73,7 @@ class Map():
     if len(self.map) == 0:
       return None
 
-    return self.map[coords[1] * self.width + coords[0]]
+    return self.map[coords.y * self.width + coords.x]
 
   def walkable(self, coords):
     if len(self.map) == 0:

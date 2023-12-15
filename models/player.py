@@ -16,6 +16,7 @@ from helpers.addresses import (
   IS_TALKING_TO_NPC_OFFSET,
   IS_IN_DELAY_OFFSET
 )
+from helpers.coordinate import Coordinate
 
 
 class Player():
@@ -66,10 +67,14 @@ class Player():
     return None
 
   def coordinates(self):
-    return (self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET), self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_Y_OFFSET))
+    x = self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_X_OFFSET)
+    y = self.game.process.memory.read_u_int(self.game.base + PLAYER_COORDINATE_Y_OFFSET)
+    return Coordinate(x, y)
 
   def screen_coordinates(self):
-    return (self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_X_OFFSET), self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_Y_OFFSET))
+    x = self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_X_OFFSET)
+    y = self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_Y_OFFSET)
+    return Coordinate(x, y)
 
   def state(self):
     return self.game.process.memory.read_u_int(self.base() + STATE_OFFSET)

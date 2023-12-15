@@ -3,6 +3,7 @@ import win32process
 import math
 
 from helpers.map import CELL_PIXEL_SIZE
+from helpers.coordinate import Coordinate
 
 WINDOW_NAME = "4th | Gepard Shield 3.0 (^-_-^)"
 
@@ -44,7 +45,7 @@ class Window():
 
   def translate_to_screen_coords(self, player_coords, target_coords):
     # Distance vector
-    distance_x, distance_y = (target_coords[0] - player_coords[0], -(target_coords[1] - player_coords[1]))
+    distance_x, distance_y = (target_coords.x - player_coords.x, -(target_coords.y - player_coords.y))
 
     # Rotate the distance vector acording to the horizontal camera angle rotation
     angle_radians = math.radians(self.game.world.view.horizontal_camera_angle())
@@ -56,4 +57,4 @@ class Window():
     target_x = center_x + target_x * CELL_PIXEL_SIZE[0]
     target_y = center_y + target_y * CELL_PIXEL_SIZE[1]
 
-    return int(round(target_x)), int(round(target_y))
+    return Coordinate(int(round(target_x)), int(round(target_y)), _type="screen")

@@ -93,8 +93,8 @@ class Mouse():
     if game_coords:
       pos = self.game.window.translate_to_screen_coords(self.game.world.player.coordinates(), pos)
 
-    self.game.process.memory.write_u_int(pos[0], self.game.base + MOUSE_POS_X_OFFSET)
-    self.game.process.memory.write_u_int(pos[1], self.game.base + MOUSE_POS_Y_OFFSET)
+    self.game.process.memory.write_u_int(pos.x, self.game.base + MOUSE_POS_X_OFFSET)
+    self.game.process.memory.write_u_int(pos.y, self.game.base + MOUSE_POS_Y_OFFSET)
 
   def send_click(self, destination=None):
     lParam = 0

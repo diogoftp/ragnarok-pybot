@@ -92,6 +92,8 @@ class Game():
       return "restocking_arrow"
     if not self.macro.active and len(self.map.map) > 0 and len(list(self.world.entity_list)) == 0:
       return "walking"
+    if not self.macro.active and len(self.map.map) > 0 and self.action.fight.fighting_entity is not None and self.action.fight.distance_to_entity > 7:
+      return "walking_to_monster"
     if not self.macro.active and len(list(self.world.entity_list)) > 0:
       return "fighting"
 
@@ -102,6 +104,11 @@ class Game():
       self.action.restock_arrow.restock()
     if self.world.player.current_action == "walking":
       self.action.walk.step()
+    if self.world.player.current_action == "walking_to_monster":
+      self.action.walk.calculate_route_to(self.action.fight.fighting_entity.coords())
+      sleep(0.1)
+      self.action.walk.step()
+      sleep(0.1)
     if self.world.player.current_action == "fighting":
       self.action.fight.fight()
 

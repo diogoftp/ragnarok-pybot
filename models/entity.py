@@ -12,6 +12,7 @@ from helpers.addresses import (
   C_SPR_RES_OFFSET,
   SPRITE_NAME_OFFSET
 )
+from helpers.coordinate import Coordinate
 
 
 class EntityList():
@@ -98,10 +99,14 @@ class Entity():
     return self.process.memory.read_u_int(self.base + ID_OFFSET)
 
   def coords(self):
-    return (self.process.memory.read_u_int(self.base + COORDINATE_X_OFFSET), self.process.memory.read_u_int(self.base + COORDINATE_Y_OFFSET))
+    x = self.process.memory.read_u_int(self.base + COORDINATE_X_OFFSET)
+    y = self.process.memory.read_u_int(self.base + COORDINATE_Y_OFFSET)
+    return Coordinate(x, y)
 
   def screen_coords(self):
-    return (self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_X_OFFSET), self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_Y_OFFSET))
+    x = self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_X_OFFSET)
+    y = self.process.memory.read_u_int(self.base + SCREEN_COORDINATE_Y_OFFSET)
+    return Coordinate(x, y, _type="screen")
 
   def name(self):
     cspr_res_address = self.process.memory.read_ptr(self.base + C_SPR_RES_OFFSET)

@@ -1,5 +1,8 @@
+import math
+
+
 class Coordinate():
-  def __init__(x, y, _type="game"):
+  def __init__(self, x, y, _type="game"):
     self.x = x
     self.y = y
     self.type = _type
@@ -7,11 +10,19 @@ class Coordinate():
   def __str__(self):
     return f"({self.x}, {self.y}, {self.type})"
 
+  def distance_to(self, target):
+    dx = self.x - target.x
+    dy = self.y - target.y
+
+    return math.sqrt(dx**2 + dy**2)
+
   def to_screen(self, game):
     if self.type == "screen":
       return
     else:
-      player_x, player_y = game.player.coordinates()
+      player_coords = game.player.coordinates()
+      player_x = player_coords.x
+      player_y = player_coords.y
       # Distance vector from center
       distance_x, distance_y = (self.x - player_x, -(self.y - player_y))
 

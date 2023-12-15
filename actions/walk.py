@@ -3,7 +3,10 @@ import ctypes
 import math
 import random
 
+from helpers.coordinate import Coordinate
+
 WALKABLE_BLOCKS = [0, 3]
+
 
 class PathMetadata(ctypes.Structure):
   _fields_ = [("path", ctypes.POINTER(ctypes.c_int32)), ("size", ctypes.c_size_t)]
@@ -24,14 +27,12 @@ class Walk():
     if len(self.game.map.map) == 0:
       return None
 
-    rand_x = random.randrange(self.game.map.width)
-    rand_y = random.randrange(self.game.map.height)
+    random_coord = Coordinate(random.randrange(self.game.map.width), random.randrange(self.game.map.height))
 
-    while not self.game.map.walkable((rand_x, rand_y)):
-      rand_x = random.randrange(self.game.map.width)
-      rand_y = random.randrange(self.game.map.height)
+    while not self.game.map.walkable(random_coord):
+      random_coord = Coordinate(random.randrange(self.game.map.width), random.randrange(self.game.map.height))
 
-    return (rand_x, rand_y)
+    return random_coord
 
   def calculate_route_to(self, dest):
     if len(self.game.map.map) == 0:
@@ -41,7 +42,8 @@ class Walk():
     map_array = (ctypes.c_int32 * len(self.game.map.map))(*self.game.map.map)
     player_coords = self.game.world.player.coordinates()
     self.lib.My_ShortestPath.restype = PathMetadata
-    result = self.lib.My_ShortestPath(map_array, self.game.map.width, self.game.map.height, player_coords[0], player_coords[1], dest[0], dest[1])
+    result = self.lib.My_ShortestPath(map_array, self.game.map.width, self.game.map.height, player_coords.x, player_coords.y, dest.x, dest.y)
+    self.destination = dest
     self.current_path = [result.path[i:i+2] for i in range(0, result.size, 2)]
 
   def step(self):
@@ -52,17 +54,14 @@ class Walk():
       return
 
     player_coords = self.game.world.player.coordinates()
-    step = self.current_path[0]
-
-    dx = player_coords[0] - step[0]
-    dy = player_coords[1] - step[1]
-    distance = math.sqrt(dx**2 + dy**2)
+    current_dest = Coordinate(self.current_path[0][0], self.current_path[0][1])
+    distance = player_coords.distance_to(current_dest)
 
     # Check if is close enough to current step
     if distance <= 3:
-      del self.current_path[:5]
-      return
+      del self.current_path[:3]
 
-    # Walk
-    self.game.input.mouse.set_game_mouse_pos(self.current_path[0], game_coords=True)
-    self.game.input.mouse.send_click()
+    if len(self.current_path) > 0:
+      # Walk
+      self.game.input.mouse.set_game_mouse_pos(Coordinate(self.current_path[0][0], self.current_path[0][1]), game_coords=True)
+      self.game.input.mouse.send_click()
