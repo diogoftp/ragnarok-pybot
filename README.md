@@ -10,8 +10,16 @@ The purpose of this project is to learn reverse engineering and Windows API in P
 
 - **Macro:** hardcoded macro that supports sending keystrokes and mouse clicks directly to the game window. The mouse click can't be sent to a specific location if the window is not on top, but the click is registered. Useful for spamming a skill on you character feet while alt-tabbing. It runs in a separate thread because of the delays on it and can be toggled on/off.
 - **Game information:** reads game information that is needed for executing actions, such as the character name, current map name, map coordinates, current hp, maximum hp.
-- (In progress) **Walking:** the game stores some map information the .gat files. These files were extracted from the game and read, creating a graph with whether each map cell is walkable of not. Most of the maps are 400x400, but this information is also present in the .gat file.
+- (In progress) **Walking:** the game stores some map information the .gat files. These files were extracted from the game and read, creating a graph with whether each map cell is walkable of not. Most of the maps can be up to 400x400, but this information is also present in the .gat file.
 - **Entity list:** reads the current entities (players, npcs, monsters...) in the screen. Will be used in the future for fighting monsters.
+
+## Compiling the c++ file to dll
+The c++ file can be compiled with any c++ compiler, as long as the target platform is 64bit Windows.
+
+Using [MSVC](https://learn.microsoft.com/en-us/cpp/build/reference/compiler-options?view=msvc-170), it can be compiled with:
+`cl.exe /LD /EHsc helpers/shortest_path.cpp`
+
+Put the dll in the _helpers_ folder. You can check if the function is being exported correctly with `dumpbin /exports helpers/shortest_path.dll`. The output must export `My_ShortestPath`.
 
 ## Documentation
 
@@ -77,12 +85,8 @@ The _.gat_ files were extacted from the game's _data.grf_ using [this GRF editor
 
 [] Walk to a coordinate outside of screen area. Basically use the [A*](https://www.geeksforgeeks.org/a-search-algorithm/) algorithm to find the shortest path in the map graph read from the _.gat_ files. Will probably be implemented both in Python and C (using [Cython](https://cython.org/)) for performance comparison.
 
-[] Make walking work with any camera angle configured in the game. At this moment, changing the camera angle breaks walking.
-
 [] Pick up items from the ground.
-
-[] Monster fighting. This will probably introduce a global bot state, such as walking, fighting, looting...
 
 [] Walking from anywhere to anywhere. Will probably look into Openkore files to find where the information about map links are (which maps connect to which maps).
 
-[] Automatic returning to town and storing/selling items.
+[] Automatic storing/selling items.
