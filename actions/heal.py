@@ -32,7 +32,6 @@ class Heal():
 
     # Talk to healer
     if (self.game.world.player.map_name() == TOWN) and self.should_heal():
-      self.game.world.entity_list.update_array()
       for entity in self.game.world.entity_list:
         if entity.name() == "f_leedsh":
           self.game.input.mouse.set_game_mouse_pos(entity.screen_coords(), game_coords=False)
@@ -44,7 +43,6 @@ class Heal():
 
     # Go back to map
     if (self.game.world.player.map_name() == TOWN) and not self.should_heal():
-      self.game.world.entity_list.update_array()
       for entity in self.game.world.entity_list:
         if entity.name() == "ep18_miriam":
           self.game.input.mouse.set_game_mouse_pos(entity.screen_coords(), game_coords=False)

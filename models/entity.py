@@ -22,7 +22,6 @@ class EntityList():
     self.current = self.first()
     self.first_address = self.current
     self.current_entity_instance = Entity(self.process, self.process.memory.read_ptr(self.current, offset=ENTITY_OFFSET))
-    self.entity_array = []
 
   def base(self):
     return self.game.process.memory.read_ptr_chain(self.game.base + WORLD_BASE_INTERMED_OFFSET, [WORLD_BASE_OFFSET, ENTITY_LIST_OFFSET])
@@ -50,12 +49,6 @@ class EntityList():
 
     self.reset()
     raise StopIteration
-
-  def update_array(self):
-    self.entity_array = []
-
-    for entity in self:
-      self.entity_array.append(entity)
 
   def first(self):
     return self.process.memory.read_ptr(self.base())

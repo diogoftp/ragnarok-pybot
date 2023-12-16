@@ -13,6 +13,7 @@ from models.player import Player
 from models.macro import Macro
 from models.action import Action
 from models.inventory import Inventory
+from actions.fight import MIN_DISTANCE_TO_ATTACK
 
 
 class Game():
@@ -68,6 +69,7 @@ class Game():
 
   def refresh_game_data(self):
     self.map.reload()
+    self.action.fight.update_monster_list()
 
   def print_game_state(self):
     os.system("cls")
@@ -90,11 +92,13 @@ class Game():
       return "healing"
     if self.action.restock_arrow.should_restock():
       return "restocking_arrow"
-    if not self.macro.active and len(self.map.map) > 0 and len(list(self.world.entity_list)) == 0:
+    if not self.macro.active and len(self.map.map) > 0 and len(self.action.fight.monster_list) == 0:
       return "walking"
-    if not self.macro.active and len(self.map.map) > 0 and self.action.fight.fighting_entity is not None and self.action.fight.distance_to_entity > 7:
+    if not self.macro.active and len(self.action.fight.monster_list) > 0 and self.action.fight.fighting_entity is None:
+      return "finding_monster"
+    if not self.macro.active and len(self.map.map) > 0 and self.action.fight.fighting_entity is not None and self.action.fight.distance_to_entity() > MIN_DISTANCE_TO_ATTACK:
       return "walking_to_monster"
-    if not self.macro.active and len(list(self.world.entity_list)) > 0:
+    if not self.macro.active and self.action.fight.fighting_entity is not None and self.action.fight.distance_to_entity() <= MIN_DISTANCE_TO_ATTACK:
       return "fighting"
 
     return "idle"
@@ -104,6 +108,8 @@ class Game():
       self.action.restock_arrow.restock()
     if self.world.player.current_action == "walking":
       self.action.walk.step()
+    if self.world.player.current_action == "finding_monster":
+      self.action.fight.find_target()
     if self.world.player.current_action == "walking_to_monster":
       self.action.walk.calculate_route_to(self.action.fight.fighting_entity.coords())
       sleep(0.1)
