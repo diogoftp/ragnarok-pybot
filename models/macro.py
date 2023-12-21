@@ -37,7 +37,8 @@ class Macro():
 
       self.game.input.keyboard.send_key(self.game.input.keyboard.VKEYS.F2)
       coords = self.game.world.player.screen_coordinates()
-      coords = Coordinate(coords.x + random.randint(-10, 10), coords.y + random.randint(-10, 10))
+      coords.x += random.randint(-10, 10)
+      coords.y += random.randint(-10, 10)
       self.game.input.mouse.set_game_mouse_pos(coords, game_coords=False)
       self.game.input.mouse.send_click()
       sleep(0.02)

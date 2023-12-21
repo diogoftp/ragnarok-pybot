@@ -74,7 +74,7 @@ class Player():
   def screen_coordinates(self):
     x = self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_X_OFFSET)
     y = self.game.process.memory.read_u_int(self.base() + PLAYER_SCREEN_COORD_Y_OFFSET)
-    return Coordinate(x, y)
+    return Coordinate(x, y, _type="screen")
 
   def state(self):
     return self.game.process.memory.read_u_int(self.base() + STATE_OFFSET)

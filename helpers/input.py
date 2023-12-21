@@ -7,6 +7,7 @@ from ctypes import windll
 
 from helpers.addresses import MOUSE_POS_X_OFFSET, MOUSE_POS_Y_OFFSET
 from helpers.mouse_blocker import MouseBlocker
+from helpers.coordinate import Coordinate
 
 
 class Input():
@@ -96,16 +97,15 @@ class Mouse():
     self.game.process.memory.write_u_int(pos.x, self.game.base + MOUSE_POS_X_OFFSET)
     self.game.process.memory.write_u_int(pos.y, self.game.base + MOUSE_POS_Y_OFFSET)
 
-  def send_click(self, destination=None):
+  def send_click(self, destination:Coordinate=None):
     lParam = 0
 
     if destination != None:
-      destination = self.game.window.translate_to_screen_coords(self.game.world.player.coordinates(), destination)
-      screen_destination = win32gui.ClientToScreen(self.game.window.handle, destination)
-      win32api.SetCursorPos(screen_destination)
-      lParam = win32api.MAKELONG(screen_destination[0], screen_destination[1])
+      if destination.type == "game":
+        destination.to_screen(self.game)
 
-    win32gui.PostMessage(self.game.window.handle, win32con.WM_SETCURSOR, self.game.window.handle, 0x02010001)
+      lParam = win32api.MAKELONG(destination.x, destination.y)
+
     win32gui.PostMessage(self.game.window.handle, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, lParam)
     sleep(0.05)
     win32gui.PostMessage(self.game.window.handle, win32con.WM_LBUTTONUP, 0, lParam)

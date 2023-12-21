@@ -1,5 +1,7 @@
 import math
 
+from helpers.window import CELL_PIXEL_SIZE
+
 
 class Coordinate():
   def __init__(self, x, y, _type="game"):
@@ -20,24 +22,9 @@ class Coordinate():
     if self.type == "screen":
       return
     else:
-      player_coords = game.player.coordinates()
-      player_x = player_coords.x
-      player_y = player_coords.y
-      # Distance vector from center
-      distance_x, distance_y = (self.x - player_x, -(self.y - player_y))
-
-      # Rotate the distance vector acording to the horizontal camera angle rotation
-      angle_radians = math.radians(game.view.horizontal_camera_angle())
-      target_x = distance_x * math.cos(angle_radians) + distance_y * math.sin(angle_radians)
-      target_y = -distance_x * math.sin(angle_radians) + distance_y * math.cos(angle_radians)
-
-      # Calculate the distance in pixels
-      center_x, center_y = self.center()
-      target_x = center_x + target_x * CELL_PIXEL_SIZE[0]
-      target_y = center_y + target_y * CELL_PIXEL_SIZE[1]
-
-      self.x = int(round(target_x))
-      self.y = int(round(target_y))
+      pos = game.window.translate_to_screen_coords(game.world.player.coordinates(), self)
+      self.x = pos.x
+      self.y = pos.y
       self.type = "game"
 
   def to_game(self):
